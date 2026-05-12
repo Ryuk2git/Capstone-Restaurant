@@ -3,6 +3,7 @@ package com.edutech.dto;
 public class AssignManagerRequest {
     private Long restaurantId;
     private Long user;
+	
 	public Long getRestaurantId() {
 		return restaurantId;
 	}

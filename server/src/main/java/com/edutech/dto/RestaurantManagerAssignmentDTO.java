@@ -23,6 +23,7 @@ public class RestaurantManagerAssignmentDTO {
 		this.managerEmail = managerEmail;
 		this.assignedAt = assignedAt;
 	}
+	
 	public Long getAssignmentId() {
 		return assignmentId;
 	}
