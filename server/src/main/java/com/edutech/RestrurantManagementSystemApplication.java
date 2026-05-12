@@ -7,12 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RestrurantManagementSystemApplication {
 
 	public static void main(String[] args) {
-		
-                  //Write your logic here
-
-
-
-
+		System.out.println("Welcome to Order Management System");
+		SpringApplication.run(RestrurantManagementSystemApplication.class, args);
 	}
-
 }
