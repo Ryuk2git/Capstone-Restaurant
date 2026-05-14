@@ -9,5 +9,26 @@ import { AuthService } from './auth.service';
 export class FeedbackService {
   private baseUrl = environment.apiUrl;
 
-   //Write your logic here
+  constructor(private http: HttpClient) {}
+
+  submitFeedback(feedback: Feedback): Observable<Feedback> {
+    return this.http.post<Feedback>(this.baseUrl, feedback);
+  }
+
+  getFeedback(): Observable<Feedback[]> {
+    return this.http.get<Feedback[]>(this.baseUrl);
+  }
+
+  getFeedbackByMenu(menuItemId: number): Observable<Feedback[]> {
+    return this.http.get<Feedback[]>(`${this.baseUrl}/menu/${menuItemId}`);
+  }
+  
+getFeedbackByRestaurant(restaurantId: number): Observable<Feedback[]> {
+    return this.http.get<Feedback[]>(`${this.baseUrl}/restaurant/${restaurantId}`);
+  }
+
+  deleteFeedback(id: number): Observable<string> {
+    return this.http.delete(`${this.baseUrl}/${id}`, { responseType: 'text' });
+  }
+
 }

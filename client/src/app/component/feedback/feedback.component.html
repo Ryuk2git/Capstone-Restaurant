@@ -1,1 +1,110 @@
- //Write your logic here
+<nav class="navbar navbar-dark bg-dark px-4">
+  <a routerLink="/dashboard" class="btn btn-outline-light btn-sm">
+    Back
+  </a>
+
+  <span class="navbar-brand">
+    Feedback
+  </span>
+</nav>
+
+<div class="container mt-4">
+  <div *ngIf="message" class="alert alert-success">
+    {{ message }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div class="card shadow p-4 mb-4" *ngIf="role === 'CUSTOMER'">
+    <h4 class="mb-3">Submit Feedback</h4>
+
+    <form [formGroup]="feedbackForm" (ngSubmit)="submitFeedback()">
+      <div class="mb-3">
+        <label class="form-label">Menu Item</label>
+        <select class="form-select" formControlName="menuItemId">
+          <option value="">Select Menu Item</option>
+          <option *ngFor="let item of menuItems" [value]="item.id">
+            {{ item.name }} - {{ item.restaurant?.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Comment</label>
+        <textarea
+          class="form-control"
+          rows="3"
+          formControlName="comment"
+          placeholder="Write your feedback"
+        ></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Rating</label>
+        <select class="form-select" formControlName="rating">
+          <option value="">Select Rating</option>
+          <option value="1">1 - Poor</option>
+          <option value="2">2 - Average</option>
+          <option value="3">3 - Good</option>
+          <option value="4">4 - Very Good</option>
+          <option value="5">5 - Excellent</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-info">
+        Submit Feedback
+      </button>
+    </form>
+  </div>
+
+  <div class="card shadow p-4">
+    <h4 class="mb-3">Customer Feedback</h4>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Menu Item</th>
+            <th>Restaurant</th>
+            <th>Rating</th>
+            <th>Comment</th>
+            <th *ngIf="role === 'ADMIN'">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let feedback of feedbackList">
+            <td>{{ feedback.id }}</td>
+            <td>{{ feedback.customerName }}</td>
+            <td>{{ feedback.menuItem?.name }}</td>
+            <td>{{ feedback.restaurant?.name }}</td>
+            <td>{{ feedback.rating }}</td>
+            <td>{{ feedback.comment }}</td>
+            <td *ngIf="role === 'ADMIN'">
+              <button
+                type="button"
+                class="btn btn-sm btn-danger"
+                (click)="deleteFeedback(feedback.id)"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="feedbackList.length === 0">
+            <td
+              [attr.colspan]="role === 'ADMIN' ? 7 : 6"
+              class="text-center"
+            >
+              No feedback found.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

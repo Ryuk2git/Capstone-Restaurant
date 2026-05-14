@@ -9,7 +9,7 @@ import { MenuItemComponent } from './component/menu-item/menu-item.component';
 import { OrderComponent } from './component/order/order.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { LoginComponent } from './auth/login/login.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { AssignmanagerComponent } from './component/assignmanager/assignmanager.component';
 import { FeedbackComponent } from './component/feedback/feedback.component';
@@ -17,6 +17,7 @@ import { CustomerdetailsComponent } from './component/customerdetails/customerde
 import { FilterRestaurantsPipe } from './filter-restaurants.pipe';
 import { FilterOrdersPipe } from './filter-orders.pipe';
 import { FilterMenuItemsPipe } from './filter-menu-items.pipe';
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
 
 
 @NgModule({
@@ -42,7 +43,11 @@ import { FilterMenuItemsPipe } from './filter-menu-items.pipe';
     HttpClientModule,
     ReactiveFormsModule 
   ],
-  providers: [],
+  providers: [{
+    provide:HTTP_INTERCEPTORS,
+    useClass:JwtInterceptor,
+    multi:true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

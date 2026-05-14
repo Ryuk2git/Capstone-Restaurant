@@ -1,5 +1,11 @@
 import { MenuItem } from "./menu-item";
+import { Restaurant } from "./restaurant";
 
 export interface Feedback {
- //Write your logic here
+ id?:number;
+ customerName:string;
+ comment:string;
+ rating:number;
+ menuItem:MenuItem;
+ restaurant?:Restaurant;
 }

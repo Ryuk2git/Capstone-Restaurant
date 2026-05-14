@@ -7,10 +7,11 @@ export enum Role {
 }
 
 export interface User {
-  id: number;
+  id?: number;
   username: string;
-  password: string;
+  password?: string;
   email: string;
-  role: Role;
+  // role: Role;
+   role:'ADMIN' | 'MANAGER' |'CUSTOMER';
   orders:Order[];
 }

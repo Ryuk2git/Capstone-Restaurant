@@ -1,1 +1,71 @@
- //Write your logic here
+<nav class="navbar navbar-dark bg-dark px-4">
+  <span class="navbar-brand">
+    Integrated Restaurant Workflow System
+  </span>
+
+  <button type="button" class="btn btn-outline-light" (click)="logout()">
+    Logout
+  </button>
+</nav>
+
+<div class="container mt-4">
+  <div class="card shadow p-4 mb-4">
+    <h3>Welcome, {{ username }}</h3>
+    <p class="mb-0">
+      Role:
+      <strong>{{ role }}</strong>
+    </p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 mb-3" *ngIf="role === 'ADMIN'">
+      <div class="card shadow p-4 h-100">
+        <h5>Restaurant Management</h5>
+        <p>Create, update, delete and view restaurants.</p>
+        <a routerLink="/restaurant" class="btn btn-primary">
+          Open
+        </a>
+      </div>
+    </div>
+
+    <div class="col-md-4 mb-3" *ngIf="role === 'ADMIN'">
+      <div class="card shadow p-4 h-100">
+        <h5>Assign Manager</h5>
+        <p>Assign managers to restaurants.</p>
+        <a routerLink="/assign-manager" class="btn btn-primary">
+          Open
+        </a>
+      </div>
+    </div>
+
+    <div class="col-md-4 mb-3" *ngIf="role === 'MANAGER'">
+      <div class="card shadow p-4 h-100">
+        <h5>Menu Management</h5>
+        <p>Add, update, delete and view menu items.</p>
+        <a routerLink="/menu-item" class="btn btn-success">
+          Open
+        </a>
+      </div>
+    </div>
+
+    <div class="col-md-4 mb-3" *ngIf="role === 'CUSTOMER'">
+      <div class="card shadow p-4 h-100">
+        <h5>Order Food</h5>
+        <p>Browse restaurants, select menu and place orders.</p>
+        <a routerLink="/order" class="btn btn-warning">
+          Open
+        </a>
+      </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <div class="card shadow p-4 h-100">
+        <h5>Feedback</h5>
+        <p>Submit or view restaurant feedback.</p>
+        <a routerLink="/feedback" class="btn btn-info">
+          Open
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

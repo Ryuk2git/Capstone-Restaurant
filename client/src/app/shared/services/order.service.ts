@@ -9,9 +9,38 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class OrderService {
- 
+  
+ private baseUrl = environment.apiUrl;
 
-   //Write your logic here
+  constructor(private http: HttpClient) {}
+
+  placeOrder(order: Order): Observable<Order> {
+    return this.http.post<Order>(this.baseUrl, order);
+  }
+
+  getOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(this.baseUrl);
+  }
+
+  getOrderById(id: number): Observable<Order> {
+    return this.http.get<Order>(`${this.baseUrl}/${id}`);
+  }
+  
+getOrdersByUser(userId: number): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.baseUrl}/userId/${userId}`);
+  }
+
+  getOrdersByRestaurant(restaurantId: number): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.baseUrl}/restaurant/${restaurantId}`);
+  }
+
+  cancelOrder(id: number): Observable<Order> {
+    return this.http.put<Order>(`${this.baseUrl}/${id}/cancel`, {});
+  }
+
+  updateOrderStatus(id: number, status: string): Observable<Order> {
+    return this.http.put<Order>(`${this.baseUrl}/${id}/status?status=${status}`, {});
+  }
 
 
 }

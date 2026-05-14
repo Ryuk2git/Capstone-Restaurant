@@ -11,11 +11,35 @@ import { AuthGuard } from './auth.guard';
 import { AssignmanagerComponent } from './component/assignmanager/assignmanager.component';
 import { FeedbackComponent } from './component/feedback/feedback.component';
 import { CustomerdetailsComponent } from './component/customerdetails/customerdetails.component';
+import { CustomerGuard } from './customer.guard';
+import { ManagerGuard } from './manager.guard';
+import { AdminGuard } from './admin.guard';
 
-
+// canActivate: [AuthGuard]
 const routes: Routes = [
- //Write your logic here
+  
+{ path: '', redirectTo: 'login', pathMatch: 'full' },
+
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+
+  { path: 'dashboard', component: DashboardComponent },//canActivate: [AuthGuard]
+
+  { path: 'restaurant', component: RestaurantComponent },//, canActivate: [AdminGuard]
+  { path: 'assign-manager', component: AssignmanagerComponent },// canActivate: [AdminGuard]
+
+  { path: 'menu-item', component: MenuItemComponent},//, canActivate: [ManagerGuard] },
+
+  { path: 'order', component: OrderComponent},// canActivate: [CustomerGuard] },
+
+  
+{ path: 'feedback', component: FeedbackComponent},// canActivate: [AuthGuard] },
+
+  { path: '**', redirectTo: 'login' }
+
+
 ];
+
 
 
 
