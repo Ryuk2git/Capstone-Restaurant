@@ -2,5 +2,13 @@ import { MenuItem } from './menu-item';
 import { User } from './user';
 
 export interface Restaurant {
-  //Write your logic here
+  id?:number;
+  name:string;
+  location:string;
+  address:string;
+  email:string;
+  phNumber:number;
+  manager?:User;
+  menuItems:MenuItem[];
+  
 }

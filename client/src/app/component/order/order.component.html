@@ -1,1 +1,140 @@
- //Write your logic here
+<nav class="navbar navbar-dark bg-dark px-4">
+  <a routerLink="/dashboard" class="btn btn-outline-light btn-sm">
+    Back
+  </a>
+
+  <span class="navbar-brand">
+    Customer Orders
+  </span>
+</nav>
+
+<div class="container mt-4">
+  <div *ngIf="message" class="alert alert-success">
+    {{ message }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div class="card shadow p-4 mb-4">
+    <h4 class="mb-3">Place Food Order</h4>
+
+    <div class="mb-3">
+      <label class="form-label">Select Restaurant</label>
+      <select
+        class="form-select"
+        [(ngModel)]="selectedRestaurantId"
+        (change)="loadMenuItems()"
+      >
+        <option [value]="0">Select Restaurant</option>
+        <option
+          *ngFor="let restaurant of restaurants"
+          [value]="restaurant.id"
+        >
+          {{ restaurant.name }} - {{ restaurant.location }}
+        </option>
+      </select>
+    </div>
+
+    <div *ngIf="menuItems.length > 0">
+      <h5 class="mb-3">Menu Items</h5>
+
+      <div class="row">
+        <div class="col-md-4 mb-3" *ngFor="let item of menuItems">
+          <div class="card p-3 shadow-sm h-100">
+            <h6>{{ item.name }}</h6>
+
+            <p class="mb-1">
+              Type: {{ item.menuType }}
+            </p>
+
+            <p class="mb-1">
+              Price: ₹{{ item.price }}
+            </p>
+
+            <p class="mb-2">
+              Available: {{ item.quantity }}
+            </p>
+
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                [disabled]="item.quantity <= 0"
+                (change)="toggleItem(item, $event)"
+              />
+
+              <label class="form-check-label">
+                Select
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h5 class="mt-3">
+        Total Amount: ₹{{ totalAmount }}
+      </h5>
+
+      <button type="button" class="btn btn-warning" (click)="placeOrder()">
+        Place Order
+      </button>
+    </div>
+
+    <div *ngIf="selectedRestaurantId && menuItems.length === 0" class="alert alert-info">
+      No menu items available for this restaurant.
+    </div>
+  </div>
+
+  <div class="card shadow p-4">
+    <h4 class="mb-3">Order History</h4>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Restaurant</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Order Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let order of orders">
+            <td>{{ order.id }}</td>
+            <td>{{ order.restaurant?.name }}</td>
+            <td>
+              <span *ngFor="let item of order.items; let last = last">
+                {{ item.name }}{{ last ? '' : ', ' }}
+              </span>
+            </td>
+            <td>₹{{ order.totalAmount }}</td>
+            <td>{{ order.status }}</td>
+            <td>{{ order.orderTime | date: 'medium' }}</td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-sm btn-danger"
+                *ngIf="order.status !== 'CANCELLED' && order.status !== 'DELIVERED'"
+                (click)="cancelOrder(order.id)"
+              >
+                Cancel
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="orders.length === 0">
+            <td colspan="7" class="text-center">
+              No orders found.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

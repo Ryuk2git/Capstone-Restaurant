@@ -2,13 +2,23 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Restaurant } from '../../model/restaurant';
+<<<<<<< HEAD
+import { environment } from '../../../environments/environment';
+import { AuthService } from './auth.service';
+import { User } from '../../model/user';
+import { AssignManagerRequest } from '../../model/loginrequest';
+=======
 import { RestaurantManagerAssignmentDTO } from '../../model/restaurant-manager-assignment-dto';
 import { environment } from '../../../environments/environment';
+>>>>>>> e91b7ecdf614888a33ab1ebae4912c64cc63427b
 
 @Injectable({
   providedIn: 'root'
 })
 export class RestaurantService {
+<<<<<<< HEAD
+   //Write your logic here
+=======
   
  private baseUrl = environment.apiUrl;
 
@@ -60,4 +70,5 @@ updateRestaurant(id: number, restaurant: Restaurant): Observable<Restaurant> {
   }
 
   
+>>>>>>> e91b7ecdf614888a33ab1ebae4912c64cc63427b
 }

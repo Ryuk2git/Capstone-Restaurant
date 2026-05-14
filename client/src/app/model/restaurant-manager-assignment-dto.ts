@@ -1,4 +1,10 @@
 export interface RestaurantManagerAssignmentDTO {
-   //Write your logic here
+   id?:number;
+   restaurantId:number;
+   restaurantName?:string;
+   managerId:number;
+   managerName?:string;
+   assignedBy:number;
+   assignedAt:string;
 
 }

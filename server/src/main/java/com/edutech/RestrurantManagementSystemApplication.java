@@ -3,16 +3,11 @@ package com.edutech;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-
+@SpringBootApplication
 public class RestrurantManagementSystemApplication {
 
 	public static void main(String[] args) {
-		
-                  //Write your logic here
-
-
-
-
+		System.out.println("Welcome to Order Management System");
+		SpringApplication.run(RestrurantManagementSystemApplication.class, args);
 	}
-
 }

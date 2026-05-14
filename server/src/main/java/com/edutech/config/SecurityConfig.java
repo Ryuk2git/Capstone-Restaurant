@@ -31,14 +31,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.jwtRequestFilter = jwtRequestFilter;
         this.passwordEncoder = passwordEncoder;
     }
-
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-    }
-
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
@@ -73,9 +65,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             
          //customer feed back
             
-            .antMatchers(HttpMethod.GET, "/api/feedback/menu/*").hasAnyAuthority("CUSTOMER","ADMIN")
-            .antMatchers(HttpMethod.GET, "/api/feedback").hasAnyAuthority("CUSTOMER","ADMIN")
-            .antMatchers(HttpMethod.POST, "/api/feedback").hasAnyAuthority("CUSTOMER","ADMIN")
+            // .antMatchers(HttpMethod.GET, "/api/feedback/menu/*").hasAnyAuthority("CUSTOMER","ADMIN")
+            // .antMatchers(HttpMethod.GET, "/api/feedback").hasAnyAuthority("CUSTOMER","ADMIN")
+            // .antMatchers(HttpMethod.POST, "/api/feedback").hasAnyAuthority("CUSTOMER","ADMIN")
+            .antMatchers(HttpMethod.GET, "/api/feedback/menu/*").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/feedback").permitAll()
+            .antMatchers(HttpMethod.POST, "/api/feedback").permitAll()
             
             // Email
             .antMatchers(HttpMethod.POST, "/api/send-email").hasAnyAuthority("ADMIN")
