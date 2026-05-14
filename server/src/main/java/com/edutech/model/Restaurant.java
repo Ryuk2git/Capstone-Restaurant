@@ -2,6 +2,7 @@ package com.edutech.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,7 +38,7 @@ public class Restaurant {
     private Long phoneNumber;
 
     // Relationship Mapping 
-    @OneToMany
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true) 
     @JsonManagedReference
     private List<MenuItem> menuItems;
 

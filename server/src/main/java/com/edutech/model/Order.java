@@ -1,6 +1,7 @@
 package com.edutech.model;
 
-import java.sql.Date;
+
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +15,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-@Table(name = "order")
+@Table(name = "customer_orders")
 public class Order {
 	// Attribute Declarations
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)

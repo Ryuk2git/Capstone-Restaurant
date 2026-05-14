@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-@Table(name = "") // To be added later
+@Table(name = "menuItem") // To be added later
 public class MenuItem {
 	// Attribute Declarations
 	@Id

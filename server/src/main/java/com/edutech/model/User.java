@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
      @Id
      @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,7 @@ public class User {
      @Column(nullable = false)
      private Role role;
 
-     @OneToMany(mappedBy = "order")
+     @OneToMany(mappedBy = "user")
      @JsonManagedReference
      private List<Order> orders;
 
