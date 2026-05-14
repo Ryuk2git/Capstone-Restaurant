@@ -15,7 +15,7 @@ import { User } from '../../model/user';
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.scss']
 })
-export class OrderComponent  {
+export class OrderComponent implements OnInit{
    
  restaurants: Restaurant[] = [];
   menuItems: MenuItem[] = [];

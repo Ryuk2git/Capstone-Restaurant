@@ -16,7 +16,7 @@ import { OrderService } from '../../shared/services/order.service';
   templateUrl: './feedback.component.html',
   styleUrls: ['./feedback.component.scss']
 })
-export class FeedbackComponent {
+export class FeedbackComponent implements OnInit{
 
 
 feedbackForm: FormGroup;

@@ -12,7 +12,7 @@ import { RestaurantManagerAssignmentDTO } from '../../model/restaurant-manager-a
   templateUrl: './assignmanager.component.html',
   styleUrls: ['./assignmanager.component.scss']
 })
-export class AssignmanagerComponent  {
+export class AssignmanagerComponent implements OnInit {
 
    
 assignForm: FormGroup;

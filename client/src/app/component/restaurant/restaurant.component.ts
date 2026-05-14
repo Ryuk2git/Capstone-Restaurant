@@ -13,7 +13,7 @@ import { User } from '../../model/user';
   templateUrl: './restaurant.component.html',
   styleUrls: ['./restaurant.component.scss']
 })
-export class RestaurantComponent{
+export class RestaurantComponent implements OnInit{
   
 restaurantForm: FormGroup;
   restaurants: Restaurant[] = [];

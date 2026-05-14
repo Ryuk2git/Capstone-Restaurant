@@ -12,7 +12,7 @@ import { AuthService } from '../../shared/services/auth.service';
   templateUrl: './menu-item.component.html',
   styleUrls: ['./menu-item.component.scss']
 })
-export class MenuItemComponent  {
+export class MenuItemComponent implements OnInit {
    menuForm: FormGroup;
   menuItems: MenuItem[] = [];
   restaurants: Restaurant[] = [];
