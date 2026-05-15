@@ -11,38 +11,57 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "customer_orders")
 public class Order {
-	// Attribute Declarations
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "order_id")
-	private Long id;
 
-	@Column(name = "customer_name")
-	private String customerName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id")
+    private Long id;
 
-	@Column(name = "order_time")
-	private Date orderTime; // sql date
+    @NotBlank(message = "Customer name is required")
+    @Size(min = 2, max = 50, message = "Customer name must be between 2 and 50 characters")
+    @Column(name = "customer_name")
+    private String customerName;
 
-	@Column(name = "status")
-	private String status;
+    @NotNull(message = "Order time is required")
+    @Column(name = "order_time")
+    private Date orderTime;
 
-	@Column(name = "total_amount")
-	private Double totalAmount;
+    @NotBlank(message = "Order status is required")
+    @Pattern(
+        regexp = "PENDING|CONFIRMED|PREPARING|DELIVERED|CANCELLED",
+        message = "Invalid order status"
+    )
+    @Column(name = "status")
+    private String status;
 
-	@ManyToOne
-	@JoinColumn(name = "restaurant_id")
-	@JsonBackReference
-	private Restaurant restaurant;
+    @NotNull(message = "Total amount is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Total amount must be greater than 0")
+    @Digits(integer = 10, fraction = 2, message = "Invalid amount format")
+    @Column(name = "total_amount")
+    private Double totalAmount;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	@JsonBackReference
-	private User user;
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    @JsonIgnore
+    private Restaurant restaurant;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference(value = "user-order")
+    private User user;
 
 	// Empty Constructor
     public Order() {

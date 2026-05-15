@@ -2,10 +2,12 @@ package com.edutech.controller;
 
 import java.util.List;
 
-import org.aspectj.weaver.ast.Or;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+// import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,66 +18,43 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.edutech.model.Order;
 import com.edutech.service.OrderService;
+
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @PostMapping
+    public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) {
+        return ResponseEntity.status(201).body(orderService.createOrder(order));
+    }
+
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders() {
-        try {
-            List<Order> order = orderService.getAllOrders();
-            return ResponseEntity.status(200).body(order);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
+        return ResponseEntity.ok(orderService.getAllOrders());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
-        try {
-            Order order = orderService.getOrderById(id);
-            return ResponseEntity.status(200).body(order);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
+        return ResponseEntity.ok(orderService.getOrderById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<Order> addOrder(@RequestBody  Order order) {
-        try {
-            
-            Order orders = orderService.addOrder(order);
-            return ResponseEntity.status(200).body(orders);
-        } catch (Exception e) {
-
-            return ResponseEntity.status(500).build();
-        }
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody Order order) {
-        try {
-          
-
-            Order orders = orderService.updateOrder(id, order);
-            return ResponseEntity.status(200).body(orders);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
+    @GetMapping("/userId/{userId}")
+    public ResponseEntity<List<Order>> getOrdersByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(orderService.getOrdersByUser(userId));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrder(Long id) {
-        try {
-            
-            orderService.deleteOrder(id);
+    public ResponseEntity<String> deleteOrder(@PathVariable Long id) {
+        orderService.deleteOrder(id);
+        return ResponseEntity.ok("Order deleted successfully");
+    }
 
-         return ResponseEntity.status(200).build();
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<String> cancelOrder(@PathVariable Long id) {
+        orderService.cancelOrder(id);
+        return ResponseEntity.ok("Order cancelled successfully");
     }
 
 }

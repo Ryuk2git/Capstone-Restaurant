@@ -8,33 +8,54 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "menuItem") // To be added later
+@Table(name = "menu_item")
 public class MenuItem {
-	// Attribute Declarations
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
 
-	@Column(name = "name", nullable = false)
-	private String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(name = "menu_type", nullable = false)
-	private String menuType;
+    @NotBlank(message = "Menu item name is required")
+    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
+    @Column(name = "name", nullable = false)
+    private String name;
 
-	@Column(name = "price", nullable = false)
-	private Double price;
+    @NotBlank(message = "Menu type is required")
+    @Pattern(
+        regexp = "VEG|NON_VEG|VEGAN|BEVERAGE|DESSERT",
+        message = "Menu type must be VEG, NON_VEG, VEGAN, BEVERAGE, or DESSERT"
+    )
+    @Column(name = "menu_type", nullable = false)
+    private String menuType;
 
-	@Column(name = "quantity", nullable = false)
-	private Integer quantity;
+    @NotNull(message = "Price is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
+    @Digits(integer = 8, fraction = 2, message = "Invalid price format")
+    @Column(name = "price", nullable = false)
+    private Double price;
 
-	@ManyToOne
-	@JoinColumn(name = "restaurant_id")
-	@JsonBackReference
-	private Restaurant restaurant;
+    @NotNull(message = "Quantity is required")
+    @Min(value = 0, message = "Quantity cannot be negative")
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    @JsonIgnoreProperties({"menuItems"})
+    private Restaurant restaurant;
 
 	// Empty Constructor
 	public MenuItem() {

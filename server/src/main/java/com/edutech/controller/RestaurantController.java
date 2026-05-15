@@ -2,6 +2,8 @@ package com.edutech.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,70 +15,57 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.edutech.dto.AssignManagerRequest;
+import com.edutech.dto.RestaurantManagerAssignmentDTO;
 import com.edutech.model.Restaurant;
+import com.edutech.service.RestaurantManagerAssignmentService;
 import com.edutech.service.RestaurantService;
 
 @RestController
 @RequestMapping("/api/restaurants")
 public class RestaurantController {
+
    @Autowired
    private RestaurantService restaurantService;
 
+   @Autowired
+   private RestaurantManagerAssignmentService assignmentService;
+
+   @PostMapping
+   public ResponseEntity<Restaurant> createRestaurant(@Valid @RequestBody Restaurant restaurant) {
+      return ResponseEntity.status(201).body(restaurantService.createRestaurant(restaurant));
+   }
+
    @GetMapping
-   public ResponseEntity<List<Restaurant>> getAllRestuarant() {
-      try {
-         List<Restaurant> res = restaurantService.getAllRestuatrant();
-         return ResponseEntity.status(200).body(res);
-      } catch (Exception e) {
-         return ResponseEntity.status(500).build();
-      }
+   public ResponseEntity<List<Restaurant>> getAllRestaurants() {
+      return ResponseEntity.ok(restaurantService.getAllRestaurants());
    }
 
    @GetMapping("/{id}")
-   public ResponseEntity<Restaurant> getRestuarantById(@PathVariable Long id) {
-      try {
-
-         Restaurant res = restaurantService.getRestuarantById(id);
-         return ResponseEntity.status(200).body(res);
-      } catch (Exception e) {
-         return ResponseEntity.status(500).build();
-      }
-   }
-
-   @PostMapping
-   public ResponseEntity<Restaurant> addRestuarant(@RequestBody Restaurant restaurant) {
-      try {
-
-         Restaurant res = restaurantService.addRestaurant(restaurant);
-         return ResponseEntity.status(200).body(res);
-      } catch (Exception e) {
-
-         return ResponseEntity.status(500).build();
-      }
+   public ResponseEntity<Restaurant> getRestaurantById(@PathVariable Long id) {
+      return ResponseEntity.ok(restaurantService.getRestaurantById(id));
    }
 
    @PutMapping("/{id}")
-   public ResponseEntity<Restaurant> updateRestuarant(@PathVariable Long id, @RequestBody Restaurant restaurant) {
-      try {
-
-         Restaurant res = restaurantService.updateRestaurant(id, restaurant);
-         return ResponseEntity.status(200).body(res);
-
-      } catch (Exception e) {
-         return ResponseEntity.status(500).build();
-      }
+   public ResponseEntity<Restaurant> updateRestaurant(@PathVariable Long id, @Valid @RequestBody Restaurant restaurant) {
+      return ResponseEntity.ok(restaurantService.updateRestaurant(id, restaurant));
    }
 
    @DeleteMapping("/{id}")
-   public ResponseEntity<Void> deleteRestuarant(@PathVariable Long id) {
-      try {
+   public ResponseEntity<Void> deleteRestaurant(@PathVariable Long id) {
+      restaurantService.deleteRestaurant(id);
+      return ResponseEntity.ok().build();
+   }
 
-         restaurantService.deleteRestuarant(id);
+   @PostMapping("/assignmanager")
+   public ResponseEntity<RestaurantManagerAssignmentDTO> assignManager(
+         @Valid @RequestBody AssignManagerRequest request) {
+      return ResponseEntity.status(201).body(assignmentService.assignManager(request));
+   }
 
-         return ResponseEntity.status(200).build();
-      } catch (Exception e) {
-         return ResponseEntity.status(500).build();
-      }
+   @GetMapping("/assignmanager")
+   public ResponseEntity<List<RestaurantManagerAssignmentDTO>> getAssignments() {
+      return ResponseEntity.ok(assignmentService.getAllAssignments());
    }
 
 }

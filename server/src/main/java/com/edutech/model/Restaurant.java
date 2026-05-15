@@ -10,36 +10,48 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "restaurant")
 public class Restaurant {
-    // Attribute Declarations
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "restaurant_id")
     private Long id;
 
+    @NotBlank(message = "Restaurant name is required")
+    @Size(min = 2, max = 100, message = "Restaurant name must be between 2 and 100 characters")
     @Column(name = "name")
     private String name;
 
+    @NotBlank(message = "Location is required")
+    @Size(min = 2, max = 100, message = "Location must be between 2 and 100 characters")
     @Column(name = "location")
     private String location;
 
+    @NotBlank(message = "Address is required")
+    @Size(min = 10, max = 255, message = "Address must be between 10 and 255 characters")
     @Column(name = "address")
     private String address;
 
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
     @Column(name = "email")
     private String email;
 
-    @Column(name = "phone_number")
+    @NotNull(message = "Phone number is required")
     private Long phoneNumber;
 
-    // Relationship Mapping 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true) 
-    @JsonManagedReference
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<MenuItem> menuItems;
 
     // Empty Constructor

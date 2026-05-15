@@ -1,4 +1,277 @@
-GET https://orchardsolvemb76.lntedutech.com/project/7277/proxy/3000/api/feedback
+@baseUrl = https://orchardsolvemb76.lntedutech.com/project/3292/proxy/3000
+@token = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc3ODgwNzQxNywiZXhwIjoxNzc4ODkzODE3fQ.7JTp6OWHvIdSw0NYxaxn3Wr80FR0z9nMP8EYSjVCPoGCHPZbqqn5T-9o7aFc14Qo3i_nPF1FviWtgFuvp1pbdQ
 
 
+
+###################### AUTH APIs #######################
+
+### Register User
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Admin@123",
+  "email": "admin@gmail.com",
+  "role": "ADMIN"
+}
+
+
+
+### Login User
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Admin@123"
+}
+
+
+
+### Get User Details
+GET {{baseUrl}}/api/auth/userDetails?userId=1
+Authorization: Bearer {{token}}
+
+# The Above api works
+
+
+################### RESTAURANT APIs ####################
+
+### Create Restaurant
+POST {{baseUrl}}/api/restaurants
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Spice Garden",
+  "location": "Mumbai",
+  "address": "Andheri West",
+  "email": "spicegarden@gmail.com",
+  "phoneNumber": 9876543210
+}
+
+
+
+### Get All Restaurants
+GET {{baseUrl}}/api/restaurants
+Authorization: Bearer {{token}}
+
+
+
+### Get Restaurant By ID
+GET {{baseUrl}}/api/restaurants/1
+Authorization: Bearer {{token}}
+
+
+
+### Update Restaurant
+PUT {{baseUrl}}/api/restaurants/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Updated Spice Garden",
+  "location": "Pune",
+  "address": "Baner Pune",
+  "email": "updated@gmail.com",
+  "phoneNumber": 9999999999
+}
+
+
+
+### Delete Restaurant
+DELETE {{baseUrl}}/api/restaurants/1
+Authorization: Bearer {{token}}
+
+# The above Api works
+
+
+############# RESTAURANT MANAGER APIs ##################
+
+
+### Assign Manager
+POST {{baseUrl}}/api/restaurants/assignmanager
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "restaurantId": 1,
+  "user": 1
+}
+
+
+
+### View All Assignments
+GET {{baseUrl}}/api/restaurants/assignmanager
+Authorization: Bearer {{token}}
+
+
+# Above Api Works
+
+################### MENU ITEM APIs #####################
+
+
+### Add Menu Item
+POST {{baseUrl}}/api/menuItems
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Paneer Curry Masala",
+  "menuType": "VEG",
+  "price": 250,
+  "quantity": 10,
+  "restaurant": {
+    "id": 1
+  }
+}
+
+
+
+### Get All Menu Items
+GET {{baseUrl}}/api/menuItems
+Authorization: Bearer {{token}}
+
+
+
+### Get Menu Items By Restaurant
+GET {{baseUrl}}/api/menuItems/1
+Authorization: Bearer {{token}}
+
+
+
+### Update Menu Item
+PUT {{baseUrl}}/api/menuItems/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Updated Paneer Butter Masala",
+  "menuType": "VEG",
+  "price": 300,
+  "quantity": 15,
+  "restaurant": {
+    "id": 1
+  }
+}
+
+
+
+### Delete Menu Item
+DELETE {{baseUrl}}/api/menuItems/1
+Authorization: Bearer {{token}}
+
+# Above Api works
+
+
+##################### ORDER APIs #######################
+
+
+### Create Order
+POST {{baseUrl}}/api/orders
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "customerName": "Rishikesh",
+  "status": "PENDING",
+  "totalAmount": 550,
+  "orderTime": "2026-05-15T03:20:00",
+  "restaurant": {
+    "id": 1
+  },
+  "user": {
+    "id": 1
+  }
+}
+
+
+
+### Get All Orders
+GET {{baseUrl}}/api/orders
+Authorization: Bearer {{token}}
+
+
+
+### Get Order By ID
+GET {{baseUrl}}/api/orders/1
+Authorization: Bearer {{token}}
+
+
+
+### Get Orders By User ID
+GET {{baseUrl}}/api/orders/userId/1
+Authorization: Bearer {{token}}
+
+
+
+### Cancel Order
+PUT {{baseUrl}}/api/orders/1/cancel
+Authorization: Bearer {{token}}
+# Forbidden
+
+
+### Delete Order
+DELETE {{baseUrl}}/api/orders/1
+Authorization: Bearer {{token}}
+# Above APi Works
+
+
+################### FEEDBACK APIs ######################
+
+
+### Submit Feedback
+POST {{baseUrl}}/api/feedback
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "customerName": "Rishikesh",
+  "comment": "Excellent Service",
+  "rating": 5,
+  "menuItem": {
+    "id": 1
+  }
+}
+
+
+
+### Get All Feedback
+GET {{baseUrl}}/api/feedback
+Authorization: Bearer {{token}}
+
+
+#404
+### Get Feedback By ID
+GET {{baseUrl}}/api/feedback/1
+Authorization: Bearer {{token}}
+
+
+
+### Get Feedback By Menu Item
+GET {{baseUrl}}/api/feedback/menu/1
+Authorization: Bearer {{token}}
+
+
+#404
+### Update Feedback
+PUT {{baseUrl}}/api/feedback/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "customerName": "Updated User",
+  "comment": "Updated feedback",
+  "rating": 4,
+  "menuItem": {
+    "id": 1
+  }
+}
+
+
+#404
+### Delete Feedback
+DELETE {{baseUrl}}/api/feedback/1
+Authorization: Bearer {{token}}
 

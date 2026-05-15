@@ -8,28 +8,42 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "feedback")
 public class Feedback {
-   // Attribute Declarations
-   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
+   @NotBlank(message = "Customer name is required")
+   @Size(min = 2, max = 50, message = "Customer name must be between 2 and 50 characters")
    @Column(name = "customer_name")
    private String customerName;
 
+   @NotBlank(message = "Comment is required")
+   @Size(min = 5, max = 500, message = "Comment must be between 5 and 500 characters")
    @Column(name = "comment")
    private String comment;
 
+   @NotNull(message = "Rating is required")
+   @Min(value = 1, message = "Rating must be at least 1")
+   @Max(value = 5, message = "Rating cannot exceed 5")
    @Column(name = "rating")
    private Integer rating;
 
    @ManyToOne
    @JoinColumn(name = "menu_item_id")
-   @JsonBackReference
+   @JsonIgnore
    private MenuItem menuItem;
 
    @ManyToOne

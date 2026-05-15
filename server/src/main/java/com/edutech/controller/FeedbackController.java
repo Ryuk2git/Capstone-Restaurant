@@ -2,6 +2,8 @@ package com.edutech.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,39 +20,20 @@ import com.edutech.service.FeedbackService;
 @RequestMapping("/api/feedback")
 public class FeedbackController {
     @Autowired
-    FeedbackService feedbackService;
+    private FeedbackService feedbackService;
+
+    @PostMapping
+    public ResponseEntity<Feedback> submitFeedback(@Valid @RequestBody Feedback feedback) {
+        return ResponseEntity.status(201).body(feedbackService.submitFeedback(feedback));
+    }
 
     @GetMapping
     public ResponseEntity<List<Feedback>> getAllFeedback() {
-        try {
-            List<Feedback> feed = feedbackService.getAllFeedback();
-       
-                return ResponseEntity.status(200).body(feed);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
+        return ResponseEntity.ok(feedbackService.getAllFeedback());
     }
 
     @GetMapping("/menu/{menuItemId}")
-    public ResponseEntity<Feedback> getFeedback(@PathVariable Long menuItemId) {
-        try {
-            Feedback feed = feedbackService.getFeedBackById(menuItemId);
-            return ResponseEntity.status(200).body(feed);
-        } catch (Exception e) {
-
-            return ResponseEntity.status(500).build();
-        }
+    public ResponseEntity<List<Feedback>> getFeedbackByMenu(@PathVariable Long menuItemId) {
+        return ResponseEntity.ok(feedbackService.getFeedbackByMenu(menuItemId));
     }
-
-    @PostMapping
-    public ResponseEntity<Feedback>addFeedback(@RequestBody Feedback feedback){
-        try {
-            Feedback feed = feedbackService.addFeedback(feedback);
-            return ResponseEntity.status(201).body(feed);
-        } catch (Exception e) {
-            
-            return ResponseEntity.status(500).build();
-        }
-    }
-
 }
