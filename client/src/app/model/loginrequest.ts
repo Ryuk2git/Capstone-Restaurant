@@ -4,6 +4,6 @@ export interface LoginRequest {
 }
 
 export interface AssignManagerRequest {
- restaurantId:string;
-user:number
+  restaurantId: string;
+  user: number
 }

@@ -1,56 +1,124 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
+<div class="auth-page">
+  <div class="auth-card">
 
-      <div class="card shadow p-4">
-        <h3 class="text-center mb-4">User Registration</h3>
+    <!-- Header -->
+    <div class="auth-header">
+      <h2>Create Account</h2>
+      <p class="subtitle">
+        Register to continue
+      </p>
+    </div>
 
-        <div *ngIf="errorMessage" class="alert alert-danger">
-          {{ errorMessage }}
+    <!-- Register Form -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <!-- Username -->
+      <div class="form-group">
+        <label for="username">
+          Username
+        </label>
+
+        <input
+          id="username"
+          type="text"
+          class="input-field"
+          placeholder="Enter username"
+          formControlName="username"
+        />
+
+        <div class="error" *ngIf="username?.invalid && username?.touched">
+          <div *ngIf="username?.errors?.['required']">
+            Username is required
+          </div>
+
+          <div *ngIf="username?.errors?.['minlength']">
+            Minimum 3 characters required
+          </div>
+
+          <div *ngIf="username?.errors?.['pattern']">
+            Only letters, numbers and underscore allowed
+          </div>
         </div>
-
-        <div *ngIf="successMessage" class="alert alert-success">
-          {{ successMessage }}
-        </div>
-
-        <form [formGroup]="registerForm" (ngSubmit)="register()">
-
-          <div class="mb-3">
-            <label>Username</label>
-            <input class="form-control" type="text" formControlName="username">
-          </div>
-
-          <div class="mb-3">
-            <label>Password</label>
-            <input class="form-control" type="password" formControlName="password">
-          </div>
-
-          <div class="mb-3">
-            <label>Email</label>
-            <input class="form-control" type="email" formControlName="email">
-          </div>
-
-          <div class="mb-3">
-            <label>Role</label>
-            <select class="form-control" formControlName="role">
-              <option value="ADMIN">ADMIN</option>
-              <option value="MANAGER">MANAGER</option>
-              <option value="CUSTOMER">CUSTOMER</option>
-            </select>
-          </div>
-
-          <button class="btn btn-success w-100" type="submit">
-            Register
-          </button>
-
-        </form>
-
-        <p class="text-center mt-3">
-          Already registered?
-          <a routerLink="/login">Login here</a>
-        </p>
       </div>
 
-    </div>
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          class="input-field"
+          placeholder="Enter email"
+          formControlName="email"
+        />
+
+        <div class="error" *ngIf="email?.invalid && email?.touched">
+          <div *ngIf="email?.errors?.['required']">
+            Email is required
+          </div>
+
+          <div *ngIf="email?.errors?.['email']">
+            Invalid email format
+          </div>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+
+        <label for="password">Password</label>
+
+        <input
+          id="password"
+          type="password"
+          class="input-field"
+          placeholder="Enter password"
+          formControlName="password"
+        />
+
+        <div class="error" *ngIf="password?.invalid && password?.touched">
+          <div *ngIf="password?.errors?.['required']">
+            Password is required
+          </div>
+
+          <div *ngIf="password?.errors?.['minlength']">
+            Minimum 6 characters required
+          </div>
+
+          <div *ngIf="password?.errors?.['pattern']">
+            Must contain uppercase, lowercase,
+            number and special character
+          </div>
+        </div>
+      </div>
+
+      <!-- Role -->
+      <div class="form-group">
+        <label for="role">Select Role</label>
+        <select id="role" class="input-field" formControlName="role">
+          <option value="">Select Role</option>
+          <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+        </select>
+        <div class="error" *ngIf="role?.invalid && role?.touched">
+          <div *ngIf="role?.errors?.['required']">
+            Please select a role
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="auth-btn" [disabled]="registerForm.invalid">Register</button>
+
+      <!-- Success -->
+      <div class="success-message" *ngIf="successMessage">{{ successMessage }}</div>
+
+      <!-- Error -->
+      <div class="error server-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+      <!-- Bottom Link -->
+      <div class="switch-text">
+        Already have an account?
+        <a routerLink="/login">Login</a>
+      </div>
+    </form>
   </div>
 </div>

@@ -2,16 +2,15 @@ import { Order } from "./order";
 
 export enum Role {
   CUSTOMER = 'CUSTOMER',
-  OWNER = 'MANAGER',
+  MANAGER = 'MANAGER',
   ADMIN = 'ADMIN'
 }
 
 export interface User {
-  id?: number;
+  id: number;
   username: string;
-  password?: string;
+  password: string;
   email: string;
-  // role: Role;
-   role:'ADMIN' | 'MANAGER' |'CUSTOMER';
+  role: Role;
   orders:Order[];
 }

@@ -11,37 +11,31 @@ import { AuthGuard } from './auth.guard';
 import { AssignmanagerComponent } from './component/assignmanager/assignmanager.component';
 import { FeedbackComponent } from './component/feedback/feedback.component';
 import { CustomerdetailsComponent } from './component/customerdetails/customerdetails.component';
-import { CustomerGuard } from './customer.guard';
-import { ManagerGuard } from './manager.guard';
-import { AdminGuard } from './admin.guard';
 
-// canActivate: [AuthGuard]
 const routes: Routes = [
-  
-{ path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
 
+  // Public
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 
-  { path: 'dashboard', component: DashboardComponent },//canActivate: [AuthGuard]
+  // Protected
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
 
-  { path: 'restaurant', component: RestaurantComponent },//, canActivate: [AdminGuard]
-  { path: 'assign-manager', component: AssignmanagerComponent },// canActivate: [AdminGuard]
+  { path: 'restaurants', component: RestaurantComponent, canActivate: [AuthGuard] },
+  { path: 'restaurants/:restaurantId/menu-items', component: MenuItemComponent, canActivate: [AuthGuard] },
+  { path: 'menu-items', component: MenuItemComponent, canActivate: [AuthGuard] },
 
-  { path: 'menu-item', component: MenuItemComponent},//, canActivate: [ManagerGuard] },
+  { path: 'orders', component: OrderComponent, canActivate: [AuthGuard] },
+  { path: 'orders/:orderId', component: OrderComponent, canActivate: [AuthGuard] },
 
-  { path: 'order', component: OrderComponent},// canActivate: [CustomerGuard] },
+  { path: 'assign-manager', component: AssignmanagerComponent, canActivate: [AuthGuard] },
+  { path: 'feedback', component: FeedbackComponent, canActivate: [AuthGuard] },
+  { path: 'customer-details', component: CustomerdetailsComponent, canActivate: [AuthGuard] },
 
-  
-{ path: 'feedback', component: FeedbackComponent},// canActivate: [AuthGuard] },
-
+  // Fallback
   { path: '**', redirectTo: 'login' }
-
-
 ];
-
-
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl:'http://localhost:3000' 
+  // apiUrl:'http://localhost:3000' 
+  apiUrl:'https://orchardsolvemb76.lntedutech.com/project/3292/proxy/3000/api/' 
   //window.location.href.replace(/5000\/.*$/, "3000")
 };
 

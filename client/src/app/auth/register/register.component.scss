@@ -1,0 +1,399 @@
+.auth-page {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+    overflow: hidden;
+
+    // background:
+    //     radial-gradient(circle at top left,
+    //         rgba(27, 73, 101, 0.9) 0%,
+    //         transparent 35%),
+
+    //     radial-gradient(circle at bottom right,
+    //         rgba(11, 110, 153, 0.9) 0%,
+    //         transparent 35%),
+
+    //     linear-gradient(
+    //         135deg,
+    //         #061a40,
+    //         #023e8a,
+    //         #0353a4,
+    //         #0466c8
+    //     );
+
+    background-size: 400% 400%;
+
+    animation:
+        gradientMove 14s ease infinite;
+}
+
+@keyframes gradientMove {
+
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+
+}
+
+.auth-card {
+    position: relative;
+
+    width: 430px;
+
+    background:
+        rgba(12, 35, 64, 0.74);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.12);
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    border-radius: 28px;
+
+    padding: 42px 34px;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.35),
+        0 0 30px rgba(0, 180, 216, 0.10);
+
+    color: white;
+
+    overflow: hidden;
+
+    animation:
+        registerAppear 0.8s ease;
+}
+
+.auth-card::before {
+    content: '';
+
+    position: absolute;
+
+    inset: -2px;
+
+    border-radius: 28px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.12),
+            rgba(255,255,255,0.02)
+        );
+
+    z-index: -1;
+
+    filter: blur(10px);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.auth-header h2 {
+    font-size: 34px;
+    font-weight: 700;
+
+    margin-bottom: 10px;
+
+    color: #f5fbff;
+
+    letter-spacing: 1px;
+}
+
+.subtitle {
+    color: #c6e7ff;
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #d9f0ff;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition: all 0.3s ease;
+}
+
+.input-field {
+    width: 100%;
+
+    padding: 14px 16px;
+
+    border-radius: 14px;
+
+    border: 2px solid transparent;
+
+    background:
+        rgba(255, 255, 255, 0.10);
+
+    color: #ffffff;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition: all 0.35s ease;
+
+    box-sizing: border-box;
+}
+
+.input-field::placeholder {
+    color:
+        rgba(230, 245, 255, 0.65);
+}
+
+
+.input-field:hover {
+    background:
+        rgba(255, 255, 255, 0.15);
+}
+
+.input-field:focus {
+
+    border-color: #4cc9f0;
+
+    background:
+        rgba(255,255,255,0.16);
+
+    box-shadow:
+        0 0 0 4px rgba(76, 201, 240, 0.16),
+        0 0 20px rgba(76, 201, 240, 0.35);
+
+    transform:
+        translateY(-2px);
+}
+
+.form-group:has(.input-field.ng-valid.ng-touched) label {
+    color: #6fe7ff;
+}
+
+.input-field.ng-valid.ng-touched {
+
+    border-color:
+        rgba(111, 231, 255, 0.75);
+
+    box-shadow:
+        0 0 10px rgba(111, 231, 255, 0.20),
+        0 0 20px rgba(111, 231, 255, 0.10);
+
+    background:
+        rgba(255,255,255,0.13);
+}
+
+.form-group:has(.input-field.ng-invalid.ng-touched) label {
+    color: #ff9c9c;
+}
+
+.input-field.ng-invalid.ng-touched {
+
+    border-color:
+        rgba(255, 107, 107, 0.9);
+
+    background:
+        rgba(255, 0, 0, 0.05);
+
+    color: #ffeaea;
+
+    box-shadow:
+        0 0 10px rgba(255, 107, 107, 0.25),
+        0 0 20px rgba(255, 107, 107, 0.12);
+}
+
+.input-field.ng-invalid.ng-touched::placeholder {
+    color:
+        rgba(255, 220, 220, 0.75);
+}
+
+select.input-field {
+    appearance: none;
+    cursor: pointer;
+}
+
+select option {
+    background: #0f2747;
+    color: white;
+}
+
+.auth-btn {
+    width: 100%;
+
+    padding: 14px;
+
+    border: none;
+    border-radius: 14px;
+
+    margin-top: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #00b4d8,
+            #48cae4,
+            #90e0ef
+        );
+
+    color: #001233;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all 0.35s ease;
+
+    box-shadow:
+        0 8px 24px rgba(0, 180, 216, 0.35);
+}
+
+.auth-btn:hover {
+
+    transform:
+        translateY(-3px)
+        scale(1.02);
+
+    background:
+        linear-gradient(
+            135deg,
+            #48cae4,
+            #90e0ef,
+            #caf0f8
+        );
+
+    box-shadow:
+        0 12px 28px rgba(0, 180, 216, 0.45),
+        0 0 18px rgba(144, 224, 239, 0.35);
+}
+
+
+.auth-btn:active {
+    transform: scale(0.98);
+}
+
+
+.auth-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.error {
+    margin-top: 6px;
+
+    color: #ffc7c7;
+
+    font-size: 12px;
+
+    animation:
+        fadeError 0.25s ease;
+}
+
+.success-message {
+    margin-top: 16px;
+
+    text-align: center;
+
+    color: #7dffb3;
+
+    font-size: 13px;
+}
+
+.switch-text {
+    margin-top: 24px;
+
+    text-align: center;
+
+    color: #dbefff;
+
+    font-size: 14px;
+}
+
+.switch-text a {
+    color: #8edfff;
+
+    text-decoration: none;
+
+    margin-left: 4px;
+
+    font-weight: 600;
+
+    transition: 0.3s ease;
+}
+
+.switch-text a:hover {
+    color: white;
+
+    text-shadow:
+        0 0 10px rgba(255,255,255,0.35);
+}
+
+@keyframes registerAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(30px)
+            rotateX(8deg);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            rotateX(0);
+    }
+
+}
+
+@keyframes fadeError {
+
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+@media (max-width: 500px) {
+
+    .auth-card {
+        width: 100%;
+        padding: 34px 24px;
+    }
+
+    .auth-header h2 {
+        font-size: 28px;
+    }
+
+}

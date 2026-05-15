@@ -10,43 +10,76 @@ import { AuthService } from './auth.service';
 })
 export class MenuItemService {
 
-   
- private baseUrl = environment.apiUrl;
+  private baseUrl =
+    `${environment.apiUrl}/menu-items`;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
-  addMenuItem(menuItem: MenuItem): Observable<MenuItem> {
-    return this.http.post<MenuItem>(this.baseUrl, menuItem);
+  private getHeaders(): HttpHeaders {
+
+    const token =
+      this.authService.getToken();
+
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
   }
 
-  getMenuItems(): Observable<MenuItem[]> {
-    return this.http.get<MenuItem[]>(this.baseUrl);
+  getAllMenuItems(): Observable<MenuItem[]> {
+
+    return this.http.get<MenuItem[]>(
+      this.baseUrl,
+      {
+        headers: this.getHeaders()
+      }
+    );
+
   }
 
-  getMenuItemById(id: number): Observable<MenuItem> {
-    return this.http.get<MenuItem>(`${this.baseUrl}/${id}`);
+  addMenuItem(
+    item: MenuItem
+  ): Observable<MenuItem> {
+
+    return this.http.post<MenuItem>(
+      this.baseUrl,
+      item,
+      {
+        headers: this.getHeaders()
+      }
+    );
+
   }
 
-  getMenuItemsByRestaurant(restaurantId: number): Observable<MenuItem[]> {
-    
-return this.http.get<MenuItem[]>(`${this.baseUrl}/restaurant/${restaurantId}`);
+  updateMenuItem(
+    id: number,
+    item: MenuItem
+  ): Observable<MenuItem> {
+
+    return this.http.put<MenuItem>(
+      `${this.baseUrl}/${id}`,
+      item,
+      {
+        headers: this.getHeaders()
+      }
+    );
+
   }
 
-  updateMenuItem(id: number, menuItem: MenuItem): Observable<MenuItem> {
-    return this.http.put<MenuItem>(`${this.baseUrl}/${id}`, menuItem);
-  }
+  deleteMenuItem(
+    id: number
+  ): Observable<any> {
 
-  deleteMenuItem(id: number): Observable<string> {
-    return this.http.delete(`${this.baseUrl}/${id}`, { responseType: 'text' });
-  }
+    return this.http.delete(
+      `${this.baseUrl}/${id}`,
+      {
+        headers: this.getHeaders()
+      }
+    );
 
-  searchByName(name: string): Observable<MenuItem[]> {
-    return this.http.get<MenuItem[]>(`${this.baseUrl}?name=${name}`);
   }
-  
-filterByType(menuType: string): Observable<MenuItem[]> {
-    return this.http.get<MenuItem[]>(`${this.baseUrl}?menuType=${menuType}`);
-  }
-
 
 }

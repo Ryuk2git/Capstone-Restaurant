@@ -1,71 +1,350 @@
-<nav class="navbar navbar-dark bg-dark px-4">
-  <span class="navbar-brand">
-    Integrated Restaurant Workflow System
-  </span>
+<header class="navbar" [class.scrolled]="isScrolled">
 
-  <button type="button" class="btn btn-outline-light" (click)="logout()">
-    Logout
-  </button>
-</nav>
+  <nav class="navbar-container">
 
-<div class="container mt-4">
-  <div class="card shadow p-4 mb-4">
-    <h3>Welcome, {{ username }}</h3>
-    <p class="mb-0">
-      Role:
-      <strong>{{ role }}</strong>
-    </p>
-  </div>
-
-  <div class="row">
-    <div class="col-md-4 mb-3" *ngIf="role === 'ADMIN'">
-      <div class="card shadow p-4 h-100">
-        <h5>Restaurant Management</h5>
-        <p>Create, update, delete and view restaurants.</p>
-        <a routerLink="/restaurant" class="btn btn-primary">
-          Open
-        </a>
-      </div>
+    <div class="nav-logo">
+      <span class="logo-icon">🍽</span>
+      <span class="logo-text">RMS Dashboard</span>
     </div>
 
-    <div class="col-md-4 mb-3" *ngIf="role === 'ADMIN'">
-      <div class="card shadow p-4 h-100">
-        <h5>Assign Manager</h5>
-        <p>Assign managers to restaurants.</p>
-        <a routerLink="/assign-manager" class="btn btn-primary">
-          Open
-        </a>
+    <ul class="nav-links">
+
+      <li><a href="#">Dashboard</a></li>
+      <li><a href="#">Restaurants</a></li>
+      <li><a href="#">Customers</a></li>
+      <li><a href="#">Menu</a></li>
+      <li><a href="#">Feedback</a></li>
+
+    </ul>
+
+    <div class="nav-user">
+
+      <div class="user-info">
+
+        <span class="username">
+          {{ currentUser?.username }}
+        </span>
+
+        <span class="role">
+          {{ currentUser?.role }}
+        </span>
+
       </div>
+
+      <div class="avatar">
+        {{ currentUser?.username?.charAt(0) }}
+      </div>
+
     </div>
 
-    <div class="col-md-4 mb-3" *ngIf="role === 'MANAGER'">
-      <div class="card shadow p-4 h-100">
-        <h5>Menu Management</h5>
-        <p>Add, update, delete and view menu items.</p>
-        <a routerLink="/menu-item" class="btn btn-success">
-          Open
-        </a>
-      </div>
+  </nav>
+
+</header>
+
+<main class="dashboard-content">
+
+  <section class="hero-card glass-card">
+
+    <div class="hero-content">
+
+      <h2>
+        Smart Restaurant Management Platform
+      </h2>
+
+      <p>
+        Manage restaurants, customers, menus, orders, analytics and feedback from one centralized dashboard.
+      </p>
+
     </div>
 
-    <div class="col-md-4 mb-3" *ngIf="role === 'CUSTOMER'">
-      <div class="card shadow p-4 h-100">
-        <h5>Order Food</h5>
-        <p>Browse restaurants, select menu and place orders.</p>
-        <a routerLink="/order" class="btn btn-warning">
-          Open
-        </a>
-      </div>
+  </section>
+
+  <section class="stats-row">
+
+    <div class="stat-box glass-card">
+
+      <h3>
+        {{ restaurants.length }}
+      </h3>
+
+      <p>
+        Restaurants
+      </p>
+
     </div>
 
-    <div class="col-md-4 mb-3">
-      <div class="card shadow p-4 h-100">
-        <h5>Feedback</h5>
-        <p>Submit or view restaurant feedback.</p>
-        <a routerLink="/feedback" class="btn btn-info">
-          Open
-        </a>
-      </div>
+    <div class="stat-box glass-card">
+
+      <h3>
+        {{ customers.length }}
+      </h3>
+
+      <p>
+        Customers
+      </p>
+
     </div>
-  </div>
-</div>
+
+    <div class="stat-box glass-card">
+
+      <h3>
+        {{ menuItems.length }}
+      </h3>
+
+      <p>
+        Menu Items
+      </p>
+
+    </div>
+
+    <div class="stat-box glass-card">
+
+      <h3>
+        {{ feedbacks.length }}
+      </h3>
+
+      <p>
+        Feedbacks
+      </p>
+
+    </div>
+
+  </section>
+
+  <section class="dashboard-section glass-card">
+
+    <div class="section-header">
+
+      <h2>
+        Restaurants
+      </h2>
+
+      <button class="action-btn add-btn" (click)="addRestaurant()">
+        + Add Restaurant
+      </button>
+
+    </div>
+
+    <table class="modern-table">
+
+      <thead>
+
+        <tr>
+
+          <th>ID</th>
+          <th>Name</th>
+          <th>Location</th>
+          <th>Rating</th>
+          <th>Actions</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let restaurant of restaurants">
+
+          <td>{{ restaurant.id }}</td>
+          <td>{{ restaurant.name }}</td>
+          <td>{{ restaurant.location }}</td>
+          <td>⭐ {{ restaurant.rating }}</td>
+
+          <td class="action-group">
+
+            <button class="table-btn edit-btn" (click)="editRestaurant(restaurant.id)">
+              Edit
+            </button>
+
+            <button class="table-btn delete-btn" (click)="deleteRestaurant(restaurant.id)">
+              Delete
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </section>
+
+  <section class="dashboard-section glass-card">
+
+    <div class="section-header">
+
+      <h2>
+        Customers
+      </h2>
+
+      <button class="action-btn add-btn">
+        + Add Customer
+      </button>
+
+    </div>
+
+    <table class="modern-table">
+
+      <thead>
+
+        <tr>
+
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Orders</th>
+          <th>Actions</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let customer of customers">
+
+          <td>{{ customer.id }}</td>
+          <td>{{ customer.name }}</td>
+          <td>{{ customer.email }}</td>
+          <td>{{ customer.orders }}</td>
+
+          <td class="action-group">
+
+            <button class="table-btn edit-btn">
+              Edit
+            </button>
+
+            <button class="table-btn delete-btn">
+              Delete
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </section>
+
+  <section class="dashboard-section glass-card">
+
+    <div class="section-header">
+
+      <h2>
+        Menu Items
+      </h2>
+
+      <button class="action-btn add-btn">
+        + Add Menu Item
+      </button>
+
+    </div>
+
+    <table class="modern-table">
+
+      <thead>
+
+        <tr>
+
+          <th>ID</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Actions</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let item of menuItems">
+
+          <td>{{ item.id }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.category }}</td>
+          <td>₹ {{ item.price }}</td>
+
+          <td class="action-group">
+
+            <button class="table-btn edit-btn">
+              Edit
+            </button>
+
+            <button class="table-btn delete-btn">
+              Delete
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </section>
+
+  <section class="dashboard-section glass-card">
+
+    <div class="section-header">
+
+      <h2>
+        Feedback
+      </h2>
+
+      <button class="action-btn add-btn">
+        + Add Feedback
+      </button>
+
+    </div>
+
+    <table class="modern-table">
+
+      <thead>
+
+        <tr>
+
+          <th>ID</th>
+          <th>Customer</th>
+          <th>Message</th>
+          <th>Rating</th>
+          <th>Actions</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let feedback of feedbacks">
+
+          <td>{{ feedback.id }}</td>
+          <td>{{ feedback.customer }}</td>
+          <td>{{ feedback.message }}</td>
+          <td>⭐ {{ feedback.rating }}</td>
+
+          <td class="action-group">
+
+            <button class="table-btn edit-btn">
+              Edit
+            </button>
+
+            <button class="table-btn delete-btn">
+              Delete
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </section>
+
+</main>

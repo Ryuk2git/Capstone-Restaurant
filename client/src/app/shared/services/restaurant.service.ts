@@ -2,62 +2,97 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Restaurant } from '../../model/restaurant';
-import { RestaurantManagerAssignmentDTO } from '../../model/restaurant-manager-assignment-dto';
 import { environment } from '../../../environments/environment';
+import { AuthService } from './auth.service';
+import { User } from '../../model/user';
+import { AssignManagerRequest } from '../../model/loginrequest';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RestaurantService {
-  
- private baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  private baseUrl =
+    `${environment.apiUrl}/restaurants`;
 
-  createRestaurant(restaurant: Restaurant): Observable<Restaurant> {
-    return this.http.post<Restaurant>(this.baseUrl, restaurant);
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
+
+  private getHeaders(): HttpHeaders {
+
+    const token =
+      this.authService.getToken();
+
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
   }
 
-  getRestaurants(): Observable<Restaurant[]> {
-    return this.http.get<Restaurant[]>(this.baseUrl);
+  getAllRestaurants(): Observable<Restaurant[]> {
+
+    return this.http.get<Restaurant[]>(
+      this.baseUrl,
+      {
+        headers: this.getHeaders()
+      }
+    );
+
   }
 
   getRestaurantById(id: number): Observable<Restaurant> {
-    return this.http.get<Restaurant>(`${this.baseUrl}/${id}`);
-  }
-  
-updateRestaurant(id: number, restaurant: Restaurant): Observable<Restaurant> {
-    return this.http.put<Restaurant>(`${this.baseUrl}/${id}`, restaurant);
+
+    return this.http.get<Restaurant>(
+      `${this.baseUrl}/${id}`,
+      {
+        headers: this.getHeaders()
+      }
+    );
+
   }
 
-  deleteRestaurant(id: number): Observable<string> {
-    return this.http.delete(`${this.baseUrl}/${id}`, { responseType: 'text' });
+  addRestaurant(
+    restaurant: Restaurant
+  ): Observable<Restaurant> {
+
+    return this.http.post<Restaurant>(
+      this.baseUrl,
+      restaurant,
+      {
+        headers: this.getHeaders()
+      }
+    );
+
   }
 
-  searchByName(name: string): Observable<Restaurant[]> {
-    return this.http.get<Restaurant[]>(`${this.baseUrl}?name=${name}`);
+  updateRestaurant(
+    id: number,
+    restaurant: Restaurant
+  ): Observable<Restaurant> {
+
+    return this.http.put<Restaurant>(
+      `${this.baseUrl}/${id}`,
+      restaurant,
+      {
+        headers: this.getHeaders()
+      }
+    );
+
   }
 
-  searchByLocation(location: string): Observable<Restaurant[]> {
-    return this.http.get<Restaurant[]>(`${this.baseUrl}?location=${location}`);
-    
-}
+  deleteRestaurant(
+    id: number
+  ): Observable<any> {
 
-  getRestaurantsByManager(managerId: number): Observable<Restaurant[]> {
-    return this.http.get<Restaurant[]>(`${this.baseUrl}/manager/${managerId}`);
+    return this.http.delete(
+      `${this.baseUrl}/${id}`,
+      {
+        headers: this.getHeaders()
+      }
+    );
+
   }
 
-  assignManager(request: RestaurantManagerAssignmentDTO): Observable<Restaurant> {
-    return this.http.post<Restaurant>(`${this.baseUrl}/assignmanager`, request);
-  }
-
-  getAssignments(): Observable<RestaurantManagerAssignmentDTO[]> {
-    return this.http.get<RestaurantManagerAssignmentDTO[]>(`${this.baseUrl}/assignmanager`);
-  }
-  
-    deleteAssignment(id: number): Observable<string> {
-    return this.http.delete(`${this.baseUrl}/assignmanager/${id}`, { responseType: 'text' });
-  }
-
-  
 }

@@ -9,38 +9,61 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class OrderService {
-  
- private baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  private baseUrl =
+    `${environment.apiUrl}/orders`;
 
-  placeOrder(order: Order): Observable<Order> {
-    return this.http.post<Order>(this.baseUrl, order);
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
+
+  private getHeaders(): HttpHeaders {
+
+    const token =
+      this.authService.getToken();
+
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
   }
 
-  getOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(this.baseUrl);
+  getAllOrders(): Observable<Order[]> {
+
+    return this.http.get<Order[]>(
+      this.baseUrl,
+      {
+        headers: this.getHeaders()
+      }
+    );
+
   }
 
-  getOrderById(id: number): Observable<Order> {
-    return this.http.get<Order>(`${this.baseUrl}/${id}`);
-  }
-  
-getOrdersByUser(userId: number): Observable<Order[]> {
-    return this.http.get<Order[]>(`${this.baseUrl}/userId/${userId}`);
+  getOrderById(
+    id: number
+  ): Observable<Order> {
+
+    return this.http.get<Order>(
+      `${this.baseUrl}/${id}`,
+      {
+        headers: this.getHeaders()
+      }
+    );
+
   }
 
-  getOrdersByRestaurant(restaurantId: number): Observable<Order[]> {
-    return this.http.get<Order[]>(`${this.baseUrl}/restaurant/${restaurantId}`);
-  }
+  deleteOrder(
+    id: number
+  ): Observable<any> {
 
-  cancelOrder(id: number): Observable<Order> {
-    return this.http.put<Order>(`${this.baseUrl}/${id}/cancel`, {});
-  }
+    return this.http.delete(
+      `${this.baseUrl}/${id}`,
+      {
+        headers: this.getHeaders()
+      }
+    );
 
-  updateOrderStatus(id: number, status: string): Observable<Order> {
-    return this.http.put<Order>(`${this.baseUrl}/${id}/status?status=${status}`, {});
   }
-
 
 }

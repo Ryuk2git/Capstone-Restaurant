@@ -16,6 +16,29 @@ Content-Type: application/json
   "role": "ADMIN"
 }
 
+######## Customer Register ################
+
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "customer",
+  "password": "Customer@123",
+  "email": "customer@gmail.com",
+  "role": "CUSTOMER"
+}
+
+######## Manager Register ################
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "manager",
+  "password": "Manager@123",
+  "email": "manager@gmail.com",
+  "role": "MANAGER"
+}
+
 
 
 ### Login User
@@ -25,6 +48,24 @@ Content-Type: application/json
 {
   "username": "admin",
   "password": "Admin@123"
+}
+
+### Login Customer
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "customer",
+  "password": "Customer@123"
+}
+
+### Login Manager
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "manager",
+  "password": "Manager@123"
 }
 
 
@@ -242,9 +283,8 @@ GET {{baseUrl}}/api/feedback
 Authorization: Bearer {{token}}
 
 
-#404
 ### Get Feedback By ID
-GET {{baseUrl}}/api/feedback/1
+GET {{baseUrl}}/api/feedback/3
 Authorization: Bearer {{token}}
 
 
@@ -254,7 +294,6 @@ GET {{baseUrl}}/api/feedback/menu/1
 Authorization: Bearer {{token}}
 
 
-#404
 ### Update Feedback
 PUT {{baseUrl}}/api/feedback/1
 Content-Type: application/json
@@ -270,8 +309,8 @@ Authorization: Bearer {{token}}
 }
 
 
-#404
 ### Delete Feedback
 DELETE {{baseUrl}}/api/feedback/1
 Authorization: Bearer {{token}}
 
+### Above api working

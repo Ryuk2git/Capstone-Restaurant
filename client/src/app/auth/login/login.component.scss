@@ -1,17 +1,419 @@
-.login-container {
-  width: 300px;
-  margin: auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+/* ===== Global Background ===== */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  height: 100vh;
+  overflow: hidden;
+
+  background:
+    radial-gradient(circle at top left, #1b4965 0%, transparent 35%),
+    radial-gradient(circle at bottom right, #0b6e99 0%, transparent 35%),
+    linear-gradient(
+      135deg,
+      #061a40,
+      #023e8a,
+      #0353a4,
+      #0466c8
+    );
+
+  background-size: 400% 400%;
+  animation: gradientMove 14s ease infinite;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-input, button {
+
+/* ===== Animated Background ===== */
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ===== Auth Container ===== */
+.auth-container {
+  min-height: 100vh;
+
   width: 100%;
-  margin: 10px 0;
-  padding: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 24px;
+
+  box-sizing: border-box;
 }
-.error {
-  color: red;
+
+/* ===== Glass Card ===== */
+.auth-card {
+  width: 100%;
+  max-width: 430px;
+
+  position: relative;
+
+  background: rgba(12, 35, 64, 0.72);
+
+  border: 1px solid rgba(255,255,255,0.12);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  border-radius: 24px;
+
+  padding: 42px 34px;
+
+  box-shadow:
+    0 10px 35px rgba(0,0,0,0.28),
+    0 0 30px rgba(0,180,216,0.10),
+    inset 0 1px 1px rgba(255,255,255,0.08);
+
+  animation: fadeIn 0.8s ease;
+}
+
+/* ===== Soft Glow ===== */
+.auth-card::before {
+  content: '';
+
+  position: absolute;
+  inset: -2px;
+
+  border-radius: 24px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,0.12),
+      rgba(255,255,255,0.02)
+    );
+
+  z-index: -1;
+
+  filter: blur(10px);
+}
+
+/* ===== Heading ===== */
+.auth-card h2 {
   text-align: center;
+
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 1px;
+
+  margin-bottom: 10px;
+
+  color: #f5fbff;
+}
+
+/* ===== Subtitle ===== */
+.subtitle {
+  text-align: center;
+
+  color: #c4dff6;
+
+  font-size: 14px;
+
+  margin-bottom: 30px;
+}
+
+/* ===== Form Group ===== */
+.form-group {
+  margin-bottom: 22px;
+  position: relative;
+}
+
+/* ===== Labels ===== */
+.form-group label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  color: #d9f0ff;
+
+  transition: all 0.3s ease;
+}
+
+/* ===== Inputs ===== */
+.input-field {
+  width: 100%;
+
+  padding: 14px 16px;
+
+  border-radius: 14px;
+  border: 2px solid transparent;
+
+  background: rgba(255,255,255,0.10);
+
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 400;
+
+  outline: none;
+
+  transition: all 0.35s ease;
+
+  box-sizing: border-box;
+}
+
+/* ===== Placeholder ===== */
+.input-field::placeholder {
+  color: rgba(230, 245, 255, 0.65);
+}
+
+/* ===== Hover ===== */
+.input-field:hover {
+  background: rgba(255,255,255,0.14);
+}
+
+/* ===== Focus ===== */
+.input-field:focus {
+  border: 2px solid #4cc9f0;
+
+  background: rgba(255,255,255,0.16);
+
+  color: #ffffff;
+
+  box-shadow:
+    0 0 0 4px rgba(76, 201, 240, 0.15),
+    0 0 20px rgba(76, 201, 240, 0.35);
+
+  transform: translateY(-2px);
+}
+
+/* ===== VALID STATE ===== */
+
+.form-group:has(.input-field.ng-valid.ng-touched) label {
+  color: #6fe7ff;
+}
+
+.input-field.ng-valid.ng-touched {
+  border: 2px solid rgba(111, 231, 255, 0.75);
+
+  box-shadow:
+    0 0 10px rgba(111, 231, 255, 0.18),
+    0 0 20px rgba(111, 231, 255, 0.10);
+
+  background: rgba(255,255,255,0.13);
+
+  color: #ffffff;
+}
+
+/* ===== INVALID STATE ===== */
+
+.form-group:has(.input-field.ng-invalid.ng-touched) label {
+  color: #ff9c9c;
+}
+
+.input-field.ng-invalid.ng-touched {
+  border: 2px solid rgba(255, 107, 107, 0.9);
+
+  background: rgba(255, 0, 0, 0.05);
+
+  color: #ffeaea;
+
+  box-shadow:
+    0 0 10px rgba(255, 107, 107, 0.25),
+    0 0 20px rgba(255, 107, 107, 0.12);
+}
+
+/* ===== Invalid Placeholder ===== */
+.input-field.ng-invalid.ng-touched::placeholder {
+  color: rgba(255, 220, 220, 0.75);
+}
+
+/* ===== Remember Section ===== */
+.remember-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 24px;
+}
+
+/* ===== Remember ===== */
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #e7f6ff;
+
+  font-size: 14px;
+}
+
+.remember input[type='checkbox'] {
+  accent-color: #4cc9f0;
+}
+
+/* ===== Forgot Password ===== */
+.forgot-password {
+  color: #8edfff;
+
+  text-decoration: none;
+
+  font-size: 13px;
+
+  transition: all 0.3s ease;
+}
+
+.forgot-password:hover {
+  color: #ffffff;
+
+  text-shadow:
+    0 0 10px rgba(255,255,255,0.4);
+}
+
+/* ===== Button ===== */
+.login-btn {
+  width: 100%;
+
+  padding: 14px;
+
+  border: none;
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #00b4d8,
+      #48cae4,
+      #90e0ef
+    );
+
+  color: #001233;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.35s ease;
+
+  box-shadow:
+    0 8px 24px rgba(0, 180, 216, 0.35);
+}
+
+/* ===== Button Hover ===== */
+.login-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+
+  background:
+    linear-gradient(
+      135deg,
+      #48cae4,
+      #90e0ef,
+      #caf0f8
+    );
+
+  box-shadow:
+    0 12px 28px rgba(0,180,216,0.45),
+    0 0 18px rgba(144,224,239,0.35);
+}
+
+/* ===== Button Click ===== */
+.login-btn:active {
+  transform: scale(0.98);
+}
+
+/* ===== Disabled ===== */
+.login-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ===== Errors ===== */
+.error {
+  color: #ffc7c7;
+
+  font-size: 12px;
+
+  margin-top: 6px;
+  padding-left: 4px;
+
+  animation: fadeError 0.25s ease;
+}
+
+/* ===== Bottom Link ===== */
+.link {
+  margin-top: 24px;
+
+  text-align: center;
+
+  color: #dbefff;
+
+  font-size: 14px;
+}
+
+.link a {
+  color: #89e0ff;
+
+  text-decoration: none;
+
+  font-weight: 500;
+
+  transition: all 0.3s ease;
+}
+
+.link a:hover {
+  color: #ffffff;
+
+  text-shadow:
+    0 0 10px rgba(255,255,255,0.35);
+}
+
+/* ===== Fade Animation ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Error Animation ===== */
+@keyframes fadeError {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+
+  .auth-container {
+    padding: 16px;
+  }
+
+  .auth-card {
+    padding: 34px 24px;
+  }
+
+  .auth-card h2 {
+    font-size: 28px;
+  }
 }

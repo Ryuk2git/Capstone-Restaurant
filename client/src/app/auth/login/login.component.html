@@ -1,42 +1,115 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-5">
+<div class="auth-container">
+  <div class="auth-card">
 
-      <div class="card shadow p-4">
-        <h3 class="text-center mb-4">Restaurant Management Login</h3>
+    <h2>Welcome Back</h2>
+    <p class="subtitle">Login to continue</p>
 
-        <div *ngIf="errorMessage" class="alert alert-danger">
-          {{ errorMessage }}
-        </div>
+    <form #form="ngForm" (ngSubmit)="submit(form)">
 
-        <div *ngIf="successMessage" class="alert alert-success">
-          {{ successMessage }}
-        </div>
+      <!-- Username -->
+      <div class="form-group">
 
-        <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <label for="username">Username</label>
 
-          <div class="mb-3">
-            <label>Username</label>
-            <input type="text" class="form-control" formControlName="username">
+        <input
+          id="username"
+          class="input-field"
+          type="text"
+          name="username"
+          [(ngModel)]="loginData.username"
+          required
+          minlength="3"
+          #username="ngModel"
+          placeholder="Enter your username"
+        />
+
+        <div class="error" *ngIf="username.invalid && username.touched">
+
+          <div *ngIf="username.errors?.['required']">
+            Username is required
           </div>
 
-          <div class="mb-3">
-            <label>Password</label>
-            <input type="password" class="form-control" formControlName="password">
+          <div *ngIf="username.errors?.['minlength']">
+            Username must contain at least 3 characters
           </div>
 
-          <button class="btn btn-primary w-100" type="submit">
-            Login
-          </button>
+        </div>
 
-        </form>
-
-        <p class="text-center mt-3">
-          New user?
-          <a routerLink="/register">Register here</a>
-        </p>
       </div>
 
-    </div>
+      <!-- Password -->
+      <div class="form-group">
+
+        <label for="password">Password</label>
+
+        <input
+          id="password"
+          class="input-field"
+          type="password"
+          name="password"
+          [(ngModel)]="loginData.password"
+          required
+          minlength="4"
+          #password="ngModel"
+          placeholder="Enter your password"
+        />
+
+        <div class="error" *ngIf="password.invalid && password.touched">
+
+          <div *ngIf="password.errors?.['required']">
+            Password is required
+          </div>
+
+          <div *ngIf="password.errors?.['minlength']">
+            Password must contain at least 4 characters
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Remember -->
+      <div class="remember-section">
+
+        <label class="remember">
+          <input
+            type="checkbox"
+            [(ngModel)]="rememberMe"
+            name="rememberMe"
+          />
+
+          <span>Remember Me</span>
+        </label>
+
+        <a class="forgot-password" href="#">
+          Forgot Password?
+        </a>
+
+      </div>
+
+      <!-- Button -->
+      <button
+        type="submit"
+        class="login-btn"
+        [disabled]="form.invalid"
+      >
+        Sign In
+      </button>
+
+      <!-- API Error -->
+      <div class="error server-error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Bottom Link -->
+      <div class="link">
+        Don't have an account?
+        <a routerLink="/register">
+          Create Account
+        </a>
+      </div>
+
+    </form>
+
   </div>
 </div>

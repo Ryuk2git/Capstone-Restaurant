@@ -1,11 +1,18 @@
-import { MenuItem } from "./menu-item";
-import { Restaurant } from "./restaurant";
+import { Customer } from './customer';
+import { Restaurant } from './restaurant';
 
 export interface Feedback {
- id?:number;
- customerName:string;
- comment:string;
- rating:number;
- menuItem:MenuItem;
- restaurant?:Restaurant;
+
+  feedbackId:number;
+
+  comment:string;
+
+  rating:number;
+
+  feedbackDate:string;
+
+  customer:Customer;
+
+  restaurant:Restaurant;
+
 }

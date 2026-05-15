@@ -1,14 +1,23 @@
+import { Customer } from './customer';
 import { Restaurant } from './restaurant';
 import { MenuItem } from './menu-item';
-import { User } from './user';
 
 export interface Order {
-  id?:number;
-  customerName:string;
-  orderTime?:string;
-  status?:string;
-  totalAmount?:number;
+
+  orderId:number;
+
+  quantity:number;
+
+  totalAmount:number;
+
+  orderStatus:string;
+
+  orderDate:string;
+
+  customer:Customer;
+
   restaurant:Restaurant;
-  items:MenuItem[];
-  user:User;
+
+  menuItems:MenuItem[];
+
 }
