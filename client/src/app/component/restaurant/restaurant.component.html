@@ -1,1 +1,98 @@
- //Write your logic here
+<div class="section-header">
+
+  <div>
+    <h2>Restaurants</h2>
+    <span class="section-subtitle">Manage restaurant listings</span>
+  </div>
+
+  <div class="section-actions">
+
+    <input
+      type="text"
+      placeholder="Search restaurants..."
+      [(ngModel)]="searchText"
+      (input)="filterRestaurants()"
+      class="search-input"
+    />
+
+    <button *ngIf="canManage" class="action-btn add-btn" (click)="openAddForm()">
+      + Add Restaurant
+    </button>
+
+  </div>
+
+</div>
+
+<table class="modern-table">
+
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Location</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th *ngIf="canManage">Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <ng-container *ngFor="let r of filteredRestaurants">
+
+      <!-- MAIN ROW -->
+      <tr class="click-row" (click)="toggleExpand(r)">
+        <td>{{r.id}}</td>
+        <td class="table-title">{{r.name}}</td>
+        <td>{{r.location}}</td>
+        <td>{{r.email}}</td>
+        <td>{{r.phoneNumber}}</td>
+
+        <td *ngIf="canManage">
+
+          <div class="action-group">
+
+            <button
+              class="table-btn edit-btn"
+              (click)="$event.stopPropagation(); openEditForm(r)"
+            >
+              Edit
+            </button>
+
+            <button
+              class="table-btn delete-btn"
+              (click)="$event.stopPropagation(); deleteRestaurant(r.id)"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        </td>
+
+      </tr>
+
+      <!-- ✅ EXPANDED MENU -->
+      <tr *ngIf="expandedRestaurantId === r.id">
+
+        <td [attr.colspan]="6">
+
+          <div class="menu-expand glass-inner">
+
+            <app-menu-item
+              [restaurantId]="r.id"
+              [restaurantName]="r.name"
+              [canManage]="canManage"
+            ></app-menu-item>
+
+          </div>
+
+        </td>
+
+      </tr>
+
+    </ng-container>
+
+  </tbody>
+
+</table>

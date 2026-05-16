@@ -58,10 +58,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/api/auth/userDetails/**").hasAnyAuthority("MANAGER","ADMIN","CUSTOMER")
 
             // MenuItem access
-            .antMatchers(HttpMethod.GET, "/api/menu-items/**").hasAnyAuthority("CUSTOMER","MANAGER")
-            .antMatchers(HttpMethod.POST, "/api/menu-items").hasAnyAuthority("CUSTOMER","MANAGER")
-            .antMatchers(HttpMethod.PUT, "/api/menu-items/**").hasAuthority("MANAGER")
-            .antMatchers(HttpMethod.DELETE, "/api/menu-items/**").hasAuthority("CUSTOMER")
+            .antMatchers(HttpMethod.GET, "/api/menu-items/**").hasAnyAuthority("CUSTOMER","MANAGER", "ADMIN")
+            .antMatchers(HttpMethod.POST, "/api/menu-items").hasAnyAuthority("CUSTOMER","MANAGER", "ADMIN")
+            .antMatchers(HttpMethod.PUT, "/api/menu-items/**").hasAnyAuthority("MANAGER", "ADMIN")
+            .antMatchers(HttpMethod.DELETE, "/api/menu-items/**").hasAnyAuthority("CUSTOMER","ADMIN")
             
          //customer feed back
             

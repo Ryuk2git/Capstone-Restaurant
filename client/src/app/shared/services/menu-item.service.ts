@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';
 })
 export class MenuItemService {
 
-  private baseUrl=`${environment.apiUrl}/menu-items`;
+  private baseUrl=`${environment.apiUrl}menu-items`;
 
   constructor(
     private http:HttpClient,

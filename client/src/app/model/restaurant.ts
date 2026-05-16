@@ -13,7 +13,7 @@ export interface Restaurant {
 
   email: string;
 
-  phoneNumber: number;
+  phoneNumber: string;
 
   manager?: User;
 

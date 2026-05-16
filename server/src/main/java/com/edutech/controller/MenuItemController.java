@@ -21,7 +21,7 @@ import com.edutech.model.MenuItem;
 import com.edutech.service.MenuItemService;
 
 @RestController
-@RequestMapping("/api/menuItems")
+@RequestMapping("/api/menu-items")
 public class MenuItemController {
    @Autowired
    private MenuItemService menuItemService;

@@ -1,1 +1,67 @@
- //Write your logic here
+<div class="section-header">
+
+  <div>
+    <h3>Menu - {{restaurantName}}</h3>
+    <span class="section-subtitle">Manage menu items</span>
+  </div>
+
+  <div class="section-actions">
+
+    <input
+      type="text"
+      placeholder="Search menu..."
+      [(ngModel)]="searchText"
+      (input)="filterMenuItems()"
+      class="search-input"
+    />
+
+    <button *ngIf="canManage" class="action-btn add-btn" (click)="openAddForm()">
+      + Add Menu Item
+    </button>
+
+  </div>
+
+</div>
+
+<table class="modern-table">
+
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Category</th>
+      <th>Price</th>
+      <th>Description</th>
+      <th *ngIf="canManage">Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <tr *ngFor="let item of filteredMenuItems">
+
+      <td>{{item.id}}</td>
+      <td>{{item.name}}</td>
+      <td>{{item.category}}</td>
+      <td>₹{{item.price}}</td>
+      <td>{{item.description}}</td>
+
+      <td *ngIf="canManage">
+        <div class="action-group">
+
+          <button class="table-btn edit-btn" (click)="openEditForm(item)">
+            Edit
+          </button>
+
+          <button class="table-btn delete-btn" (click)="deleteMenuItem(item.id)">
+            Delete
+          </button>
+
+        </div>
+      </td>
+
+    </tr>
+
+  </tbody>
+
+</table>
