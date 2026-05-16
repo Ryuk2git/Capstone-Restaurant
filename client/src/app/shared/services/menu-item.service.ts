@@ -6,77 +6,88 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn:'root'
 })
 export class MenuItemService {
 
-  private baseUrl =
-    `${environment.apiUrl}/menu-items`;
+  private baseUrl=`${environment.apiUrl}/menu-items`;
 
   constructor(
-    private http: HttpClient,
-    private authService: AuthService
-  ) {}
+    private http:HttpClient,
+    private authService:AuthService
+  ){}
 
-  private getHeaders(): HttpHeaders {
+  private getHeaders():HttpHeaders{
 
-    const token =
-      this.authService.getToken();
+    const token=this.authService.getToken();
 
     return new HttpHeaders({
-      Authorization: `Bearer ${token}`
+      Authorization:`Bearer ${token}`
     });
 
   }
 
-  getAllMenuItems(): Observable<MenuItem[]> {
+  getAllMenuItems():Observable<MenuItem[]>{
 
     return this.http.get<MenuItem[]>(
       this.baseUrl,
       {
-        headers: this.getHeaders()
+        headers:this.getHeaders()
+      }
+    );
+
+  }
+
+  getMenuItemById(
+    id:number
+  ):Observable<MenuItem>{
+
+    return this.http.get<MenuItem>(
+      `${this.baseUrl}/${id}`,
+      {
+        headers:this.getHeaders()
       }
     );
 
   }
 
   addMenuItem(
-    item: MenuItem
-  ): Observable<MenuItem> {
+    menuItem:MenuItem
+  ):Observable<MenuItem>{
 
     return this.http.post<MenuItem>(
       this.baseUrl,
-      item,
+      menuItem,
       {
-        headers: this.getHeaders()
+        headers:this.getHeaders()
       }
     );
 
   }
 
   updateMenuItem(
-    id: number,
-    item: MenuItem
-  ): Observable<MenuItem> {
+    id:number,
+    menuItem:MenuItem
+  ):Observable<MenuItem>{
 
     return this.http.put<MenuItem>(
       `${this.baseUrl}/${id}`,
-      item,
+      menuItem,
       {
-        headers: this.getHeaders()
+        headers:this.getHeaders()
       }
     );
 
   }
 
   deleteMenuItem(
-    id: number
-  ): Observable<any> {
+    id:number
+  ):Observable<any>{
 
     return this.http.delete(
       `${this.baseUrl}/${id}`,
       {
-        headers: this.getHeaders()
+        headers:this.getHeaders()
       }
     );
 

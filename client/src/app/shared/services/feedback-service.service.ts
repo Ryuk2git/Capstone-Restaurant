@@ -6,62 +6,97 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn:'root'
 })
 export class FeedbackService {
 
-  private baseUrl =
-    `${environment.apiUrl}/feedback`;
+  private baseUrl=`${environment.apiUrl}/feedback`;
 
   constructor(
-    private http: HttpClient,
-    private authService: AuthService
-  ) {}
+    private http:HttpClient,
+    private authService:AuthService
+  ){}
 
-  private getHeaders(): HttpHeaders {
 
-    const token =
-      this.authService.getToken();
+private getHeaders(): HttpHeaders {
 
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
+  const token = this.authService.getToken();
 
+  if (!token) {
+    console.error('Token is missing');
+  } else {
+    console.log('Token being sent:', token);
   }
 
-  getAllFeedback(): Observable<Feedback[]> {
+  return new HttpHeaders({
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`
+  });
+
+}
+
+
+  getAllFeedback():Observable<Feedback[]>{
 
     return this.http.get<Feedback[]>(
       this.baseUrl,
       {
-        headers: this.getHeaders()
+        headers:this.getHeaders()
+      }
+    );
+
+  }
+
+  getFeedbackById(
+    id:number
+  ):Observable<Feedback>{
+
+    return this.http.get<Feedback>(
+      `${this.baseUrl}/${id}`,
+      {
+        headers:this.getHeaders()
       }
     );
 
   }
 
   addFeedback(
-    feedback: Feedback
-  ): Observable<Feedback> {
+    feedback:Feedback
+  ):Observable<Feedback>{
 
     return this.http.post<Feedback>(
       this.baseUrl,
       feedback,
       {
-        headers: this.getHeaders()
+        headers:this.getHeaders()
+      }
+    );
+
+  }
+
+  updateFeedback(
+    id:number,
+    feedback:Feedback
+  ):Observable<Feedback>{
+
+    return this.http.put<Feedback>(
+      `${this.baseUrl}/${id}`,
+      feedback,
+      {
+        headers:this.getHeaders()
       }
     );
 
   }
 
   deleteFeedback(
-    id: number
-  ): Observable<any> {
+    id:number
+  ):Observable<any>{
 
     return this.http.delete(
       `${this.baseUrl}/${id}`,
       {
-        headers: this.getHeaders()
+        headers:this.getHeaders()
       }
     );
 

@@ -1,17 +1,10 @@
-export interface Customer {
+import { User } from './user';
+import { Order } from './order';
 
-  customerId:number;
+export interface Customer{
 
-  username:string;
+  user:User;
 
-  email:string;
-
-  phoneNumber:string;
-
-  address:string;
-
-  totalOrders:number;
-
-  createdAt:string;
+  orders:Order[];
 
 }

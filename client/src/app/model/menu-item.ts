@@ -1,20 +1,18 @@
 import { Restaurant } from './restaurant';
 
-export interface MenuItem {
+export interface MenuItem{
 
-  menuItemId:number;
+  id:number;
 
-  itemName:string;
+  name:string;
 
   description:string;
 
-  category:string;
-
   price:number;
 
-  available:boolean;
+  category:string;
 
-  imageUrl:string;
+  available:boolean;
 
   restaurant:Restaurant;
 

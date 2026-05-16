@@ -3,17 +3,42 @@
   <nav class="navbar-container">
 
     <div class="nav-logo">
-      <span class="logo-icon">🍽</span>
-      <span class="logo-text">RMS Dashboard</span>
+
+      <span class="logo-icon">
+        🍽
+      </span>
+
+      <span class="logo-text">
+        RMS Dashboard
+      </span>
+
     </div>
 
     <ul class="nav-links">
 
-      <li><a href="#">Dashboard</a></li>
-      <li><a href="#">Restaurants</a></li>
-      <li><a href="#">Customers</a></li>
-      <li><a href="#">Menu</a></li>
-      <li><a href="#">Feedback</a></li>
+      <li>
+        <a href="#restaurants">
+          Restaurants
+        </a>
+      </li>
+
+      <li>
+        <a href="#menu-items">
+          Menu
+        </a>
+      </li>
+
+      <li *ngIf="isAdminUser">
+        <a href="#orders">
+          Orders
+        </a>
+      </li>
+
+      <li *ngIf="isAdminUser">
+        <a href="#feedbacks">
+          Feedbacks
+        </a>
+      </li>
 
     </ul>
 
@@ -22,17 +47,17 @@
       <div class="user-info">
 
         <span class="username">
-          {{ currentUser?.username }}
+          {{currentUser?.username}}
         </span>
 
         <span class="role">
-          {{ currentUser?.role }}
+          {{currentUser?.role}}
         </span>
 
       </div>
 
       <div class="avatar">
-        {{ currentUser?.username?.charAt(0) }}
+        {{currentUser?.username?.charAt(0)}}
       </div>
 
     </div>
@@ -48,11 +73,13 @@
     <div class="hero-content">
 
       <h2>
-        Smart Restaurant Management Platform
+        Restaurant Management System
       </h2>
 
       <p>
-        Manage restaurants, customers, menus, orders, analytics and feedback from one centralized dashboard.
+
+        Manage restaurants, orders, menu items and customer interactions through one centralized enterprise dashboard.
+
       </p>
 
     </div>
@@ -64,7 +91,7 @@
     <div class="stat-box glass-card">
 
       <h3>
-        {{ restaurants.length }}
+        {{filteredRestaurants.length}}
       </h3>
 
       <p>
@@ -73,14 +100,14 @@
 
     </div>
 
-    <div class="stat-box glass-card">
+    <div class="stat-box glass-card" *ngIf="isAdminUser">
 
       <h3>
-        {{ customers.length }}
+        {{orders.length}}
       </h3>
 
       <p>
-        Customers
+        Orders
       </p>
 
     </div>
@@ -88,7 +115,7 @@
     <div class="stat-box glass-card">
 
       <h3>
-        {{ menuItems.length }}
+        {{filteredMenuItems.length}}
       </h3>
 
       <p>
@@ -97,10 +124,10 @@
 
     </div>
 
-    <div class="stat-box glass-card">
+    <div class="stat-box glass-card" *ngIf="isAdminUser">
 
       <h3>
-        {{ feedbacks.length }}
+        {{feedbacks.length}}
       </h3>
 
       <p>
@@ -109,19 +136,62 @@
 
     </div>
 
+    <div class="stat-box glass-card" *ngIf="isAdminUser">
+
+      <h3>
+        ₹{{totalRevenue}}
+      </h3>
+
+      <p>
+        Revenue
+      </p>
+
+    </div>
+
+    <div class="stat-box glass-card" *ngIf="isAdminUser">
+
+      <h3>
+        {{averageRating}} ★
+      </h3>
+
+      <p>
+        Average Rating
+      </p>
+
+    </div>
+
   </section>
 
-  <section class="dashboard-section glass-card">
+  <section id="restaurants" class="dashboard-section glass-card">
 
     <div class="section-header">
 
-      <h2>
-        Restaurants
-      </h2>
+      <div>
 
-      <button class="action-btn add-btn" (click)="addRestaurant()">
-        + Add Restaurant
-      </button>
+        <h2>
+          Restaurants
+        </h2>
+
+        <span class="section-subtitle">
+
+          Manage restaurant listings
+
+        </span>
+
+      </div>
+
+      <div class="section-actions">
+
+        <input type="text" placeholder="Search restaurants..." [(ngModel)]="searchRestaurant"
+          (input)="filterRestaurants()" class="search-input" />
+
+        <button *ngIf="isAdminUser" class="action-btn add-btn" (click)="addRestaurant()">
+
+          + Add Restaurant
+
+        </button>
+
+      </div>
 
     </div>
 
@@ -134,67 +204,12 @@
           <th>ID</th>
           <th>Name</th>
           <th>Location</th>
-          <th>Rating</th>
-          <th>Actions</th>
-
-        </tr>
-
-      </thead>
-
-      <tbody>
-
-        <tr *ngFor="let restaurant of restaurants">
-
-          <td>{{ restaurant.id }}</td>
-          <td>{{ restaurant.name }}</td>
-          <td>{{ restaurant.location }}</td>
-          <td>⭐ {{ restaurant.rating }}</td>
-
-          <td class="action-group">
-
-            <button class="table-btn edit-btn" (click)="editRestaurant(restaurant.id)">
-              Edit
-            </button>
-
-            <button class="table-btn delete-btn" (click)="deleteRestaurant(restaurant.id)">
-              Delete
-            </button>
-
-          </td>
-
-        </tr>
-
-      </tbody>
-
-    </table>
-
-  </section>
-
-  <section class="dashboard-section glass-card">
-
-    <div class="section-header">
-
-      <h2>
-        Customers
-      </h2>
-
-      <button class="action-btn add-btn">
-        + Add Customer
-      </button>
-
-    </div>
-
-    <table class="modern-table">
-
-      <thead>
-
-        <tr>
-
-          <th>ID</th>
-          <th>Name</th>
           <th>Email</th>
-          <th>Orders</th>
-          <th>Actions</th>
+          <th>Phone</th>
+
+          <th *ngIf="!isCustomerUser">
+            Actions
+          </th>
 
         </tr>
 
@@ -202,22 +217,49 @@
 
       <tbody>
 
-        <tr *ngFor="let customer of customers">
+        <tr *ngFor="let restaurant of filteredRestaurants; trackBy: trackById">
 
-          <td>{{ customer.id }}</td>
-          <td>{{ customer.name }}</td>
-          <td>{{ customer.email }}</td>
-          <td>{{ customer.orders }}</td>
+          <td>
+            {{restaurant.id}}
+          </td>
 
-          <td class="action-group">
+          <td>
 
-            <button class="table-btn edit-btn">
-              Edit
-            </button>
+            <div class="table-title">
+              {{restaurant.name}}
+            </div>
 
-            <button class="table-btn delete-btn">
-              Delete
-            </button>
+          </td>
+
+          <td>
+            {{restaurant.location}}
+          </td>
+
+          <td>
+            {{restaurant.email}}
+          </td>
+
+          <td>
+            {{restaurant.phoneNumber}}
+          </td>
+
+          <td *ngIf="!isCustomerUser">
+
+            <div class="action-group">
+
+              <button class="table-btn edit-btn" (click)="editRestaurant(restaurant.id)">
+
+                Edit
+
+              </button>
+
+              <button *ngIf="isAdminUser" class="table-btn delete-btn" (click)="deleteRestaurant(restaurant.id)">
+
+                Delete
+
+              </button>
+
+            </div>
 
           </td>
 
@@ -229,21 +271,74 @@
 
   </section>
 
-  <section class="dashboard-section glass-card">
+  <section id="menu-items" class="dashboard-section glass-card">
 
     <div class="section-header">
 
-      <h2>
-        Menu Items
-      </h2>
+      <div>
 
-      <button class="action-btn add-btn">
-        + Add Menu Item
-      </button>
+        <h2>
+          Menu Items
+        </h2>
+
+        <span class="section-subtitle">
+
+          Restaurant menu catalog
+
+        </span>
+
+      </div>
+
+      <div class="section-actions">
+
+        <input type="text" placeholder="Search menu items..." [(ngModel)]="searchMenuItem" (input)="filterMenuItems()"
+          class="search-input" />
+
+        <button *ngIf="!isCustomerUser" class="action-btn add-btn" (click)="addMenuItem()">
+
+          + Add Menu Item
+
+        </button>
+
+      </div>
 
     </div>
 
-    <table class="modern-table">
+    <div class="menu-card-grid" *ngIf="isCustomerUser">
+
+      <div class="menu-card glass-card" *ngFor="let item of filteredMenuItems; trackBy: trackById">
+
+        <h3>
+          {{item.name}}
+        </h3>
+
+        <p>
+          {{item.description}}
+        </p>
+
+        <div class="menu-meta">
+
+          <span>
+            {{item.category}}
+          </span>
+
+          <span>
+            ₹{{item.price}}
+          </span>
+
+        </div>
+
+        <div class="menu-restaurant">
+
+          {{item.restaurant.name}}
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <table class="modern-table" *ngIf="!isCustomerUser">
 
       <thead>
 
@@ -253,6 +348,7 @@
           <th>Name</th>
           <th>Category</th>
           <th>Price</th>
+          <th>Restaurant</th>
           <th>Actions</th>
 
         </tr>
@@ -261,22 +357,45 @@
 
       <tbody>
 
-        <tr *ngFor="let item of menuItems">
+        <tr *ngFor="let item of filteredMenuItems; trackBy: trackById">
 
-          <td>{{ item.id }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.category }}</td>
-          <td>₹ {{ item.price }}</td>
+          <td>
+            {{item.id}}
+          </td>
 
-          <td class="action-group">
+          <td>
+            {{item.name}}
+          </td>
 
-            <button class="table-btn edit-btn">
-              Edit
-            </button>
+          <td>
+            {{item.category}}
+          </td>
 
-            <button class="table-btn delete-btn">
-              Delete
-            </button>
+          <td>
+            ₹{{item.price}}
+          </td>
+
+          <td>
+            {{item.restaurant.name}}
+          </td>
+
+          <td>
+
+            <div class="action-group">
+
+              <button class="table-btn edit-btn" (click)="editMenuItem(item.id)">
+
+                Edit
+
+              </button>
+
+              <button class="table-btn delete-btn" (click)="deleteMenuItem(item.id)">
+
+                Delete
+
+              </button>
+
+            </div>
 
           </td>
 
@@ -288,17 +407,36 @@
 
   </section>
 
-  <section class="dashboard-section glass-card">
+  <section id="orders" class="dashboard-section glass-card" *ngIf="isAdminUser">
 
     <div class="section-header">
 
-      <h2>
-        Feedback
-      </h2>
+      <div>
 
-      <button class="action-btn add-btn">
-        + Add Feedback
-      </button>
+        <h2>
+          Orders
+        </h2>
+
+        <span class="section-subtitle">
+
+          Track customer orders
+
+        </span>
+
+      </div>
+
+      <div class="section-actions">
+
+        <input type="text" placeholder="Search orders..." [(ngModel)]="searchOrder" (input)="filterOrders()"
+          class="search-input" />
+
+        <button class="action-btn add-btn" (click)="addOrder()">
+
+          + Add Order
+
+        </button>
+
+      </div>
 
     </div>
 
@@ -310,8 +448,9 @@
 
           <th>ID</th>
           <th>Customer</th>
-          <th>Message</th>
-          <th>Rating</th>
+          <th>Status</th>
+          <th>Amount</th>
+          <th>Restaurant</th>
           <th>Actions</th>
 
         </tr>
@@ -320,22 +459,162 @@
 
       <tbody>
 
-        <tr *ngFor="let feedback of feedbacks">
+        <tr *ngFor="let order of filteredOrders; trackBy: trackById">
 
-          <td>{{ feedback.id }}</td>
-          <td>{{ feedback.customer }}</td>
-          <td>{{ feedback.message }}</td>
-          <td>⭐ {{ feedback.rating }}</td>
+          <td>
+            {{order.id}}
+          </td>
 
-          <td class="action-group">
+          <td>
+            {{order.customerName}}
+          </td>
 
-            <button class="table-btn edit-btn">
-              Edit
-            </button>
+          <td>
 
-            <button class="table-btn delete-btn">
-              Delete
-            </button>
+            <span class="status-badge" [ngClass]="{
+'pending':order.status==='PENDING',
+'confirmed':order.status==='CONFIRMED',
+'delivered':order.status==='DELIVERED',
+'cancelled':order.status==='CANCELLED'
+}">
+
+              {{order.status}}
+
+            </span>
+
+          </td>
+
+          <td>
+            ₹{{order.totalAmount}}
+          </td>
+
+          <td>
+            {{order.restaurant.name}}
+          </td>
+
+          <td>
+
+            <div class="action-group">
+
+              <button class="table-btn edit-btn" (click)="editOrder(order.id)">
+
+                Edit
+
+              </button>
+
+              <button class="table-btn delete-btn" (click)="deleteOrder(order.id)">
+
+                Delete
+
+              </button>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </section>
+
+  <section id="feedbacks" class="dashboard-section glass-card" *ngIf="isAdminUser">
+
+    <div class="section-header">
+
+      <div>
+
+        <h2>
+          Feedbacks
+        </h2>
+
+        <span class="section-subtitle">
+
+          Customer feedback management
+
+        </span>
+
+      </div>
+
+      <div class="section-actions">
+
+        <input type="text" placeholder="Search feedbacks..." [(ngModel)]="searchFeedback" (input)="filterFeedbacks()"
+          class="search-input" />
+
+        <button class="action-btn add-btn" (click)="addFeedback()">
+
+          + Add Feedback
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <table class="modern-table">
+
+      <thead>
+
+        <tr>
+
+          <th>ID</th>
+          <th>Customer</th>
+          <th>Comment</th>
+          <th>Rating</th>
+          <th>Restaurant</th>
+          <th>Actions</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let feedback of filteredFeedbacks; trackBy: trackById">
+
+          <td>
+            {{feedback.id}}
+          </td>
+
+          <td>
+            {{feedback.customerName}}
+          </td>
+
+          <td class="comment-cell">
+            {{feedback.comment}}
+          </td>
+
+          <td>
+
+            <span class="rating-badge">
+              ★ {{feedback.rating}}
+            </span>
+
+          </td>
+
+          <td>
+            {{feedback.restaurant.name}}
+          </td>
+
+          <td>
+
+            <div class="action-group">
+
+              <button class="table-btn edit-btn" (click)="editFeedback(feedback.id)">
+
+                Edit
+
+              </button>
+
+              <button class="table-btn delete-btn" (click)="deleteFeedback(feedback.id)">
+
+                Delete
+
+              </button>
+
+            </div>
 
           </td>
 

@@ -1,29 +1,22 @@
+import { MenuItem } from './menu-item';
 import { User } from './user';
 
 export interface Restaurant {
 
-  restaurantId:number;
+  id: number;
 
-  restaurantName:string;
+  name: string;
 
-  cuisine:string;
+  location: string;
 
-  city:string;
+  address: string;
 
-  address:string;
+  email: string;
 
-  contactNumber:string;
+  phoneNumber: number;
 
-  email:string;
+  manager?: User;
 
-  openingTime:string;
-
-  closingTime:string;
-
-  averageRating:number;
-
-  imageUrl:string;
-
-  manager:User;
+  menuItems: MenuItem[];
 
 }

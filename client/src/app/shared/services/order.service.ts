@@ -6,61 +6,88 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn:'root'
 })
 export class OrderService {
 
-  private baseUrl =
-    `${environment.apiUrl}/orders`;
+  private baseUrl=`${environment.apiUrl}/orders`;
 
   constructor(
-    private http: HttpClient,
-    private authService: AuthService
-  ) {}
+    private http:HttpClient,
+    private authService:AuthService
+  ){}
 
-  private getHeaders(): HttpHeaders {
+  private getHeaders():HttpHeaders{
 
-    const token =
-      this.authService.getToken();
+    const token=this.authService.getToken();
 
     return new HttpHeaders({
-      Authorization: `Bearer ${token}`
+      Authorization:`Bearer ${token}`
     });
 
   }
 
-  getAllOrders(): Observable<Order[]> {
+  getAllOrders():Observable<Order[]>{
 
     return this.http.get<Order[]>(
       this.baseUrl,
       {
-        headers: this.getHeaders()
+        headers:this.getHeaders()
       }
     );
 
   }
 
   getOrderById(
-    id: number
-  ): Observable<Order> {
+    id:number
+  ):Observable<Order>{
 
     return this.http.get<Order>(
       `${this.baseUrl}/${id}`,
       {
-        headers: this.getHeaders()
+        headers:this.getHeaders()
+      }
+    );
+
+  }
+
+  addOrder(
+    order:Order
+  ):Observable<Order>{
+
+    return this.http.post<Order>(
+      this.baseUrl,
+      order,
+      {
+        headers:this.getHeaders()
+      }
+    );
+
+  }
+
+  updateOrder(
+    id:number,
+    order:Order
+  ):Observable<Order>{
+
+    return this.http.put<Order>(
+      `${this.baseUrl}/${id}`,
+      order,
+      {
+        headers:this.getHeaders()
       }
     );
 
   }
 
   deleteOrder(
-    id: number
-  ): Observable<any> {
+    id:number
+  ):Observable<any>{
 
     return this.http.delete(
       `${this.baseUrl}/${id}`,
       {
-        headers: this.getHeaders()
+        headers:this.getHeaders()
       }
     );
 

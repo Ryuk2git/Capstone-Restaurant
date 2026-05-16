@@ -1,17 +1,17 @@
-import { Customer } from './customer';
+import { MenuItem } from './menu-item';
 import { Restaurant } from './restaurant';
 
-export interface Feedback {
+export interface Feedback{
 
-  feedbackId:number;
+  id:number;
+
+  customerName:string;
 
   comment:string;
 
   rating:number;
 
-  feedbackDate:string;
-
-  customer:Customer;
+  menuItem:MenuItem;
 
   restaurant:Restaurant;
 
