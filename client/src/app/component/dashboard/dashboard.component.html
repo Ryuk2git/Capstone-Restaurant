@@ -1,5 +1,4 @@
 <header class="navbar">
-
   <nav class="navbar-container">
 
     <div class="nav-logo">
@@ -9,20 +8,36 @@
 
     <ul class="nav-links">
       <li><a href="#restaurants">Restaurants</a></li>
+      <!-- Admin only -->
       <li *ngIf="isAdminUser"><a href="#orders">Orders</a></li>
       <li *ngIf="isAdminUser"><a href="#feedbacks">Feedbacks</a></li>
+      <li *ngIf="isAdminUser"><a href="#assign-manager">Assign Manager</a></li>
+      <!-- Manager only -->
+      <li *ngIf="isManagerUser"><a href="#orders">Orders</a></li>
+      <li *ngIf="isManagerUser"><a href="#feedbacks">Feedbacks</a></li>
+      <!-- Customer only -->
+      <li *ngIf="isCustomerUser"><a href="#orders">My Orders</a></li>
+      <li *ngIf="isCustomerUser"><a href="#feedbacks">My Feedback</a></li>
     </ul>
 
     <div class="nav-user">
       <div class="user-info">
         <span class="username">{{currentUser?.username}}</span>
-        <span class="role">{{currentUser?.role}}</span>
+        <span class="role-badge">{{currentUser?.role}}</span>
       </div>
-      <div class="avatar">{{currentUser?.username?.charAt(0)}}</div>
+      <div class="avatar" (click)="toggleDropdown()">{{currentUser?.username?.charAt(0)}}</div>
+
+      <!-- Dropdown -->
+      <div class="dropdown-menu" *ngIf="dropdownOpen">
+        <ul>
+          <li (click)="logout()">
+            <span class="dropdown-icon">🚪</span> Logout
+          </li>
+        </ul>
+      </div>
     </div>
 
   </nav>
-
 </header>
 
 <main class="dashboard-content">
@@ -31,23 +46,32 @@
   <section class="hero-card glass-card">
     <div class="hero-content">
       <h2>Restaurant Management System</h2>
-      <p>Manage restaurants, orders, menu items and customer interactions through one centralized dashboard</p>
+      <p>
+        <span *ngIf="isAdminUser">Manage restaurants, orders, menus, and assign managers from one place.</span>
+        <span *ngIf="isManagerUser">View and manage your assigned restaurants, menus, and orders.</span>
+        <span *ngIf="isCustomerUser">Browse restaurants, order food, and leave feedback — all in one place.</span>
+      </p>
     </div>
   </section>
 
-  <!-- ✅ RESTAURANT WITH MENU INSIDE -->
+  <!-- ✅ RESTAURANTS (all roles) -->
   <section id="restaurants" class="dashboard-section glass-card">
     <app-restaurant></app-restaurant>
   </section>
 
-  <!-- ✅ ORDERS -->
-  <section id="orders" class="dashboard-section glass-card" *ngIf="isAdminUser">
+  <!-- ✅ ORDERS (Admin + Manager + Customer) -->
+  <section id="orders" class="dashboard-section glass-card" *ngIf="isAdminUser || isManagerUser || isCustomerUser">
     <app-order></app-order>
   </section>
 
-  <!-- ✅ FEEDBACK -->
-  <section id="feedbacks" class="dashboard-section glass-card" *ngIf="isAdminUser">
+  <!-- ✅ FEEDBACK (Admin + Manager + Customer) -->
+  <section id="feedbacks" class="dashboard-section glass-card" *ngIf="isAdminUser || isManagerUser || isCustomerUser">
     <app-feedback></app-feedback>
+  </section>
+
+  <!-- ✅ ASSIGN MANAGER (Admin only) -->
+  <section id="assign-manager" class="dashboard-section glass-card" *ngIf="isAdminUser">
+    <app-assignmanager></app-assignmanager>
   </section>
 
 </main>

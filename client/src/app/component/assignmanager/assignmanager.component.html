@@ -1,1 +1,34 @@
- //Write your logic here
+<div class="section-header">
+  <div>
+    <h2>Assign Manager</h2>
+    <span class="section-subtitle">Assign a manager to a restaurant</span>
+  </div>
+</div>
+
+<div class="assign-form-container glass-card">
+  <form [formGroup]="assignForm" (ngSubmit)="onSubmit()">
+    
+    <div class="form-group">
+      <label for="restaurantId">Select Restaurant</label>
+      <select id="restaurantId" formControlName="restaurantId" class="form-control glass-input">
+        <option value="" disabled>Select a restaurant</option>
+        <option *ngFor="let r of restaurants" [value]="r.id">{{r.name}} (ID: {{r.id}})</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="managerId">Select Manager</label>
+      <select id="managerId" formControlName="managerId" class="form-control glass-input">
+        <option value="" disabled>Select a manager</option>
+        <option *ngFor="let m of managers" [value]="m.id">{{m.username}} ({{m.email}})</option>
+      </select>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
+    <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
+
+    <button type="submit" class="action-btn submit-btn" [disabled]="assignForm.invalid || loading">
+      {{ loading ? 'Assigning...' : 'Assign Manager' }}
+    </button>
+  </form>
+</div>

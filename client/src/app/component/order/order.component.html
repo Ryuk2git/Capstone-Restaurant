@@ -1,1 +1,56 @@
- <p>This is ORDER</p>
+<div class="section-header">
+  <div>
+    <h2>Orders</h2>
+    <span class="section-subtitle">
+      {{ isAdminUser ? 'All restaurant orders' : isManagerUser ? 'Orders for your restaurants' : 'Your order history' }}
+    </span>
+  </div>
+</div>
+
+<div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
+<div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
+<div *ngIf="loading" class="state-row">Loading orders...</div>
+
+<div class="table-wrapper">
+  <table class="modern-table" *ngIf="!loading">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Customer</th>
+        <th>Restaurant</th>
+        <th>Date / Time</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th *ngIf="isAdminUser || isManagerUser">Update Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let o of filteredOrders">
+        <td>#{{o.id}}</td>
+        <td>{{o.customerName}}</td>
+        <td>{{o.restaurant?.name}}</td>
+        <td>{{o.orderTime | date:'dd MMM yyyy, hh:mm a'}}</td>
+        <td class="price-text">₹{{o.totalAmount | number:'1.2-2'}}</td>
+        <td>
+          <span class="status-badge" [ngClass]="o.status?.toLowerCase()">{{o.status}}</span>
+        </td>
+        <td *ngIf="isAdminUser || isManagerUser">
+          <select
+            class="status-select glass-input"
+            [ngModel]="o.status"
+            (ngModelChange)="updateOrderStatus(o.id, $event)"
+          >
+            <option value="PENDING">PENDING</option>
+            <option value="PREPARING">PREPARING</option>
+            <option value="READY">READY</option>
+            <option value="DELIVERED">DELIVERED</option>
+            <option value="CANCELLED">CANCELLED</option>
+          </select>
+        </td>
+      </tr>
+      <tr *ngIf="filteredOrders.length === 0 && !loading">
+        <td colspan="7" class="empty-cell">No orders found.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

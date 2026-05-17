@@ -111,6 +111,11 @@ export class AuthService {
     return this.getRole() === role;
   }
 
+  // GET ALL USERS
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.baseUrl}auth/users`, this.getAuthOptions());
+  }
+
   // GET USER ID
   getUserId(): number | null {
     const id = this.getValue('userId');

@@ -10,27 +10,22 @@ import { AuthService } from '../../shared/services/auth.service';
   styleUrls: ['./restaurant.component.scss']
 })
 export class RestaurantComponent implements OnInit {
-
   restaurants: Restaurant[] = [];
   filteredRestaurants: Restaurant[] = [];
-
   searchText = '';
   loading = false;
   errorMessage = '';
-
   isAdminUser = false;
   isManagerUser = false;
   isCustomerUser = false;
-
-  // Expand row support
   expandedRestaurantId: number | null = null;
   expandedRestaurantName = '';
-
-  // Form
   showForm = false;
   isEditMode = false;
-
   currentRestaurant: Restaurant = this.emptyRestaurant();
+
+  // Universal Phone Regex used in HTML pattern attribute
+  readonly phoneRegex = "^[\\+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$";
 
   constructor(
     private restaurantService: RestaurantService,
@@ -41,179 +36,86 @@ export class RestaurantComponent implements OnInit {
     this.isAdminUser = this.authService.hasRole(Role.ADMIN);
     this.isManagerUser = this.authService.hasRole(Role.MANAGER);
     this.isCustomerUser = this.authService.hasRole(Role.CUSTOMER);
-
     this.loadRestaurants();
   }
 
-  get canManage(): boolean {
+  get canManage(): boolean { return this.isAdminUser; }
+
+  canManageMenuItem(r: Restaurant): boolean {
     return this.isAdminUser || this.isManagerUser;
   }
 
   loadRestaurants(): void {
     this.loading = true;
-    this.errorMessage = '';
-
     this.restaurantService.getAllRestaurants().subscribe({
       next: (data) => {
-        this.restaurants = data || [];
-        this.filteredRestaurants = [...this.restaurants];
-        this.loading = false;
+        const all = data || [];
+        if (this.isManagerUser) {
+          const currentUser = this.authService.getCurrentUser();
+          this.restaurantService.getAssignmentsByManager(currentUser?.id ?? 0).subscribe({
+            next: (assignments) => {
+              const assignedNames = new Set(assignments.map((a: any) => a.restaurantName));
+              this.restaurants = all.filter(r => assignedNames.has(r.name));
+              this.filteredRestaurants = [...this.restaurants];
+              this.loading = false;
+            },
+            error: () => { this.loading = false; }
+          });
+        } else {
+          this.restaurants = all;
+          this.filteredRestaurants = [...this.restaurants];
+          this.loading = false;
+        }
       },
-      error: (err) => {
-        console.error(err);
-        this.errorMessage = 'Failed to load restaurants.';
-        this.loading = false;
-      }
+      error: () => { this.loading = false; this.errorMessage = 'Failed to load.'; }
     });
   }
 
   filterRestaurants(): void {
-    const k = this.normalize(this.searchText);
-
-    if (!k) {
-      this.filteredRestaurants = [...this.restaurants];
-      return;
-    }
-
-    this.filteredRestaurants = this.restaurants.filter(r => {
-      return (
-        this.normalize(r?.name).includes(k) ||
-        this.normalize(r?.location).includes(k) ||
-        this.normalize(r?.address).includes(k) ||
-        this.normalize(r?.email).includes(k) ||
-        this.normalize(r?.phoneNumber).includes(k)
-      );
-    });
+    const k = this.searchText.toLowerCase().trim();
+    this.filteredRestaurants = k ? this.restaurants.filter(r => 
+      r.name.toLowerCase().includes(k) || r.location.toLowerCase().includes(k)
+    ) : [...this.restaurants];
   }
 
-  // Expand/collapse on row click
   toggleExpand(r: Restaurant): void {
-    if (this.expandedRestaurantId === r.id) {
-      this.expandedRestaurantId = null;
-      this.expandedRestaurantName = '';
-      return;
-    }
-
-    this.expandedRestaurantId = r.id;
-    this.expandedRestaurantName = r.name;
+    this.expandedRestaurantId = this.expandedRestaurantId === r.id ? null : r.id;
   }
 
   openAddForm(): void {
-    if (!this.canManage) return;
     this.showForm = true;
     this.isEditMode = false;
-    this.errorMessage = '';
     this.currentRestaurant = this.emptyRestaurant();
   }
 
   openEditForm(r: Restaurant): void {
-    if (!this.canManage) return;
     this.showForm = true;
     this.isEditMode = true;
-    this.errorMessage = '';
-    this.currentRestaurant = {
-      ...r,
-      manager: r.manager,
-      menuItems: r.menuItems || []
-    };
+    this.currentRestaurant = { ...r };
   }
 
-  cancelForm(): void {
-    this.showForm = false;
-    this.isEditMode = false;
-    this.errorMessage = '';
-    this.currentRestaurant = this.emptyRestaurant();
-  }
+  cancelForm(): void { this.showForm = false; }
 
   saveRestaurant(): void {
-    if (!this.canManage) return;
+    const obs = this.isEditMode 
+      ? this.restaurantService.updateRestaurant(this.currentRestaurant.id, this.currentRestaurant)
+      : this.restaurantService.addRestaurant({ ...this.currentRestaurant, menuItems: [] });
 
-    if (!this.currentRestaurant.menuItems) {
-      this.currentRestaurant.menuItems = [];
-    }
-
-    if (!this.currentRestaurant.name?.trim() ||
-        !this.currentRestaurant.location?.trim() ||
-        !this.currentRestaurant.address?.trim() ||
-        !this.currentRestaurant.email?.trim() ||
-        !this.currentRestaurant.phoneNumber?.trim()) {
-      this.errorMessage = 'Please fill all required fields.';
-      return;
-    }
-
-    if (this.isEditMode) {
-      this.restaurantService.updateRestaurant(this.currentRestaurant.id, this.currentRestaurant).subscribe({
-        next: () => {
-          this.loadRestaurants();
-          this.cancelForm();
-        },
-        error: (err) => {
-          console.error(err);
-          this.errorMessage = 'Failed to update restaurant.';
-        }
-      });
-    } else {
-      const payload: Restaurant = {
-        ...this.currentRestaurant,
-        id: 0,
-        manager: undefined,
-        menuItems: []
-      };
-
-      this.restaurantService.addRestaurant(payload).subscribe({
-        next: () => {
-          this.loadRestaurants();
-          this.cancelForm();
-        },
-        error: (err) => {
-          console.error(err);
-          this.errorMessage = 'Failed to add restaurant.';
-        }
-      });
-    }
-  }
-
-  deleteRestaurant(id: number): void {
-    if (!this.canManage) return;
-
-    const ok = confirm('Are you sure you want to delete this restaurant?');
-    if (!ok) return;
-
-    this.restaurantService.deleteRestaurant(id).subscribe({
-      next: () => {
-        this.restaurants = this.restaurants.filter(r => r.id !== id);
-        this.filterRestaurants();
-
-        if (this.expandedRestaurantId === id) {
-          this.expandedRestaurantId = null;
-          this.expandedRestaurantName = '';
-        }
-      },
-      error: (err) => {
-        console.error(err);
-        this.errorMessage = 'Failed to delete restaurant.';
-      }
+    obs.subscribe({
+      next: () => { this.loadRestaurants(); this.cancelForm(); },
+      error: () => this.errorMessage = 'Operation failed.'
     });
   }
 
-  trackById(index: number, item: Restaurant): number {
-    return item.id;
+  deleteRestaurant(id: number): void {
+    if (confirm('Delete this restaurant?')) {
+      this.restaurantService.deleteRestaurant(id).subscribe(() => this.loadRestaurants());
+    }
   }
 
-  private normalize(v: any): string {
-    return String(v ?? '').trim().toLowerCase();
-  }
+  trackById(index: number, item: Restaurant): number { return item.id; }
 
   private emptyRestaurant(): Restaurant {
-    return {
-      id: 0,
-      name: '',
-      location: '',
-      address: '',
-      email: '',
-      phoneNumber: '',
-      manager: undefined,
-      menuItems: []
-    };
+    return { id: 0, name: '', location: '', address: '', email: '', phoneNumber: '', menuItems: [] };
   }
 }

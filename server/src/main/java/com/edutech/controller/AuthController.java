@@ -42,13 +42,11 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login( @RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
-                        request.getPassword()
-                )
-        );
+                        request.getPassword()));
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
@@ -59,8 +57,7 @@ public class AuthController {
                 token,
                 user.getUsername(),
                 user.getEmail(),
-                user.getRole()
-        );
+                user.getRole());
 
         return ResponseEntity.ok(response);
     }
@@ -68,12 +65,17 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody User user) {
         userService.registerUser(user);
-        return ResponseEntity.ok( "User registered successfully");
+        return ResponseEntity.ok("User registered successfully");
     }
 
     @GetMapping("/userDetails")
     public ResponseEntity<User> getUserDetails(@RequestParam Long userId) {
         return ResponseEntity.ok(userService.getUserProfile(userId));
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<java.util.List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.findAllUser());
     }
 
 }

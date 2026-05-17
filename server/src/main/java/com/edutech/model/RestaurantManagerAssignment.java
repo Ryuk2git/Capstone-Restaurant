@@ -1,5 +1,6 @@
 package com.edutech.model;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -26,6 +27,12 @@ public class RestaurantManagerAssignment {
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+
+    @ManyToOne
+    @JoinColumn(name = "assigned_by", nullable = true)
+    private User assignedBy;
+
+    private LocalDateTime assignedAt;
 
     // @OneToMany(mappedBy = "manager")
     // private List<RestaurantManagerAssignment> assignments;
@@ -66,12 +73,20 @@ public class RestaurantManagerAssignment {
         this.restaurant = restaurant;
     }
 
-    // public List<RestaurantManagerAssignment> getAssignments() {
-    //     return assignments;
-    // }
+    public User getAssignedBy() {
+        return assignedBy;
+    }
 
-    // public void setAssignments(List<RestaurantManagerAssignment> assignments) {
-    //     this.assignments = assignments;
-    // }
+    public void setAssignedBy(User assignedBy) {
+        this.assignedBy = assignedBy;
+    }
+
+    public LocalDateTime getAssignedAt() {
+        return assignedAt;
+    }
+
+    public void setAssignedAt(LocalDateTime assignedAt) {
+        this.assignedAt = assignedAt;
+    }
 
 }

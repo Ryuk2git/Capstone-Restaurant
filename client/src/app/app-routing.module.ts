@@ -11,6 +11,7 @@ import { AuthGuard } from './auth.guard';
 import { AssignmanagerComponent } from './component/assignmanager/assignmanager.component';
 import { FeedbackComponent } from './component/feedback/feedback.component';
 import { CustomerdetailsComponent } from './component/customerdetails/customerdetails.component';
+import { Role } from './model/user';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -26,12 +27,12 @@ const routes: Routes = [
   { path: 'restaurants/:restaurantId/menu-items', component: MenuItemComponent, canActivate: [AuthGuard] },
   { path: 'menu-items', component: MenuItemComponent, canActivate: [AuthGuard] },
 
-  { path: 'orders', component: OrderComponent, canActivate: [AuthGuard] },
-  { path: 'orders/:orderId', component: OrderComponent, canActivate: [AuthGuard] },
+  { path: 'orders', component: OrderComponent, canActivate: [AuthGuard], data: { roles: [Role.ADMIN, Role.MANAGER, Role.CUSTOMER] } },
+  { path: 'orders/:orderId', component: OrderComponent, canActivate: [AuthGuard], data: { roles: [Role.ADMIN, Role.MANAGER, Role.CUSTOMER] } },
 
-  { path: 'assign-manager', component: AssignmanagerComponent, canActivate: [AuthGuard] },
-  { path: 'feedback', component: FeedbackComponent, canActivate: [AuthGuard] },
-  { path: 'customer-details', component: CustomerdetailsComponent, canActivate: [AuthGuard] },
+  { path: 'assign-manager', component: AssignmanagerComponent, canActivate: [AuthGuard], data: { roles: [Role.ADMIN] } },
+  { path: 'feedback', component: FeedbackComponent, canActivate: [AuthGuard], data: { roles: [Role.ADMIN, Role.MANAGER] } },
+  { path: 'customer-details', component: CustomerdetailsComponent, canActivate: [AuthGuard], data: { roles: [Role.ADMIN, Role.MANAGER] } },
 
   // Fallback
   { path: '**', redirectTo: 'login' }

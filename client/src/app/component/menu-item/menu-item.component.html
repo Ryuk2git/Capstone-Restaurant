@@ -1,67 +1,160 @@
-<div class="section-header">
+<!-- ===== MENU ITEM FORM (Add/Edit) ===== -->
+<div class="form-overlay" *ngIf="showForm" (click)="closeForm()">
+  <div class="form-modal glass-card" (click)="$event.stopPropagation()">
+    <div class="form-modal-header">
+      <h3>{{ isEditMode ? '✏️ Edit Menu Item' : '🍴 Add Menu Item' }}</h3>
+      <button class="close-btn" (click)="closeForm()">✕</button>
+    </div>
 
-  <div>
-    <h3>Menu - {{restaurantName}}</h3>
-    <span class="section-subtitle">Manage menu items</span>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Item Name *</label>
+        <input class="glass-input" type="text" [(ngModel)]="currentItem.name" placeholder="e.g. Butter Chicken">
+      </div>
+      <div class="form-group">
+        <label>Menu Type *</label>
+        <select class="glass-input" [(ngModel)]="currentItem.menuType">
+          <option value="VEG">VEG</option>
+          <option value="NON_VEG">NON_VEG</option>
+          <option value="VEGAN">VEGAN</option>
+          <option value="BEVERAGE">BEVERAGE</option>
+          <option value="DESSERT">DESSERT</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Price (₹) *</label>
+        <input class="glass-input" type="number" [(ngModel)]="currentItem.price" placeholder="e.g. 350" min="0">
+      </div>
+      <div class="form-group">
+        <label>Quantity *</label>
+        <input class="glass-input" type="number" [(ngModel)]="currentItem.quantity" placeholder="e.g. 10" min="0">
+      </div>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
+
+    <div class="form-actions">
+      <button class="action-btn cancel-btn" (click)="closeForm()">Cancel</button>
+      <button class="action-btn save-btn" (click)="saveMenuItem()">
+        {{ isEditMode ? 'Update Item' : 'Add Item' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LAYOUT: Menu List + Cart Side-by-Side ===== -->
+<div class="menu-layout">
+
+  <!-- LEFT: Menu Items -->
+  <div class="menu-main">
+
+    <!-- Header -->
+    <div class="menu-header">
+      <div>
+        <h3 class="menu-title">🍽 Menu — <span class="restaurant-name">{{restaurantName}}</span></h3>
+        <span class="menu-subtitle">{{ isCustomerUser ? 'Browse and add items to your cart' : 'Manage menu items' }}</span>
+      </div>
+      <div class="menu-actions">
+        <input
+          type="text"
+          placeholder="Search menu..."
+          [(ngModel)]="searchText"
+          (input)="filterMenuItems()"
+          class="search-input glass-input"
+        />
+        <button *ngIf="canManage" class="action-btn add-btn" (click)="openAddForm()">+ Add Item</button>
+      </div>
+    </div>
+
+    <!-- State rows -->
+    <div *ngIf="loading" class="state-row">Loading menu...</div>
+    <div *ngIf="errorMessage && !showForm" class="error-msg">{{ errorMessage }}</div>
+
+    <!-- Menu Cards -->
+    <div class="menu-cards" *ngIf="!loading">
+      <div
+        *ngFor="let item of filteredMenuItems; trackBy: trackById"
+        class="menu-card glass-card"
+        [class.in-cart]="isInCart(item.id)"
+      >
+        <div class="card-top">
+          <span class="category-badge">{{item.menuType}}</span>
+          <span class="price-tag">₹{{item.price}}</span>
+        </div>
+        <h4 class="item-name">{{item.name}}</h4>
+        <p class="item-desc">Available: {{item.quantity}}</p>
+
+        <!-- Customer: Add to Cart -->
+        <div *ngIf="isCustomerUser" class="card-actions">
+          <div *ngIf="!isInCart(item.id)">
+            <button class="action-btn cart-btn" (click)="addToCart(item)">+ Add to Cart</button>
+          </div>
+          <div *ngIf="isInCart(item.id)" class="qty-controls">
+            <button class="qty-btn" (click)="decreaseQty(item)">−</button>
+            <span class="qty-val">{{getCartQty(item.id)}}</span>
+            <button class="qty-btn" (click)="addToCart(item)">+</button>
+          </div>
+        </div>
+
+        <!-- Admin/Manager: Edit/Delete -->
+        <div *ngIf="canManage" class="card-actions">
+          <button class="table-btn edit-btn" (click)="openEditForm(item)">Edit</button>
+          <button class="table-btn delete-btn" (click)="deleteMenuItem(item.id)">Delete</button>
+        </div>
+
+      </div>
+
+      <div *ngIf="filteredMenuItems.length === 0" class="empty-state">
+        No menu items found.
+      </div>
+    </div>
+
   </div>
 
-  <div class="section-actions">
+  <!-- RIGHT: Cart (Customer only) -->
+  <div class="cart-sidebar glass-card" *ngIf="isCustomerUser">
+    <h3 class="cart-title">🛒 Your Order</h3>
 
-    <input
-      type="text"
-      placeholder="Search menu..."
-      [(ngModel)]="searchText"
-      (input)="filterMenuItems()"
-      class="search-input"
-    />
+    <div *ngIf="cart.length === 0" class="cart-empty">
+      <p>Your cart is empty.</p>
+      <span>Add items from the menu →</span>
+    </div>
 
-    <button *ngIf="canManage" class="action-btn add-btn" (click)="openAddForm()">
-      + Add Menu Item
-    </button>
+    <div *ngIf="cart.length > 0">
+      <div class="cart-items">
+        <div *ngFor="let c of cart" class="cart-item">
+          <div class="cart-item-info">
+            <span class="cart-item-name">{{c.menuItem.name}}</span>
+            <span class="cart-item-price">₹{{c.menuItem.price}} × {{c.qty}}</span>
+          </div>
+          <div class="cart-item-actions">
+            <button class="qty-btn sm" (click)="decreaseQty(c.menuItem)">−</button>
+            <span class="qty-val">{{c.qty}}</span>
+            <button class="qty-btn sm" (click)="addToCart(c.menuItem)">+</button>
+            <button class="remove-btn" (click)="removeFromCart(c.menuItem)">✕</button>
+          </div>
+          <div class="cart-item-subtotal">₹{{c.menuItem.price * c.qty}}</div>
+        </div>
+      </div>
 
+      <div class="cart-divider"></div>
+
+      <div class="cart-total">
+        <span>Total</span>
+        <span class="total-amount">₹{{getTotal()}}</span>
+      </div>
+
+      <div *ngIf="orderSuccess" class="success-msg">{{ orderSuccess }}</div>
+      <div *ngIf="orderError" class="error-msg">{{ orderError }}</div>
+
+      <button
+        class="action-btn place-order-btn"
+        (click)="placeOrder()"
+        [disabled]="placingOrder"
+      >
+        {{ placingOrder ? 'Placing Order...' : '✔ Place Order' }}
+      </button>
+    </div>
   </div>
 
 </div>
-
-<table class="modern-table">
-
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Category</th>
-      <th>Price</th>
-      <th>Description</th>
-      <th *ngIf="canManage">Actions</th>
-    </tr>
-  </thead>
-
-  <tbody>
-
-    <tr *ngFor="let item of filteredMenuItems">
-
-      <td>{{item.id}}</td>
-      <td>{{item.name}}</td>
-      <td>{{item.category}}</td>
-      <td>₹{{item.price}}</td>
-      <td>{{item.description}}</td>
-
-      <td *ngIf="canManage">
-        <div class="action-group">
-
-          <button class="table-btn edit-btn" (click)="openEditForm(item)">
-            Edit
-          </button>
-
-          <button class="table-btn delete-btn" (click)="deleteMenuItem(item.id)">
-            Delete
-          </button>
-
-        </div>
-      </td>
-
-    </tr>
-
-  </tbody>
-
-</table>

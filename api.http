@@ -1,7 +1,5 @@
 @baseUrl = https://orchardsolvemb76.lntedutech.com/project/3292/proxy/3000
-@token = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc3ODgwNzQxNywiZXhwIjoxNzc4ODkzODE3fQ.7JTp6OWHvIdSw0NYxaxn3Wr80FR0z9nMP8EYSjVCPoGCHPZbqqn5T-9o7aFc14Qo3i_nPF1FviWtgFuvp1pbdQ
-
-
+@token = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc3OTAwMzM2OSwiZXhwIjoxNzc5MDg5NzY5fQ.MXuXIqR1Vrcyf1iW_FQsHHhV6YRQV8AUtznwZjUL2bqP3zJhd_eUNaHsc0Lem5H4VcXhGFoTRnh9L2xGZiOS1A
 
 ###################### AUTH APIs #######################
 
@@ -22,7 +20,7 @@ POST {{baseUrl}}/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "customer",
+  "username": "customer3",
   "password": "Customer@123",
   "email": "customer@gmail.com",
   "role": "CUSTOMER"
@@ -33,7 +31,7 @@ POST {{baseUrl}}/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "manager",
+  "username": "manager3",
   "password": "Manager@123",
   "email": "manager@gmail.com",
   "role": "MANAGER"

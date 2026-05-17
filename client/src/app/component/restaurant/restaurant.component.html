@@ -1,98 +1,122 @@
-<div class="section-header">
+<div class="form-overlay" *ngIf="showForm" (click)="cancelForm()">
+  <div class="form-modal glass-card" (click)="$event.stopPropagation()">
 
-  <div>
-    <h2>Restaurants</h2>
-    <span class="section-subtitle">Manage restaurant listings</span>
+    <div class="form-modal-header">
+      <h3>{{ isEditMode ? '✏️ Edit Restaurant' : '🍽 Add Restaurant' }}</h3>
+      <button class="close-btn" (click)="cancelForm()">✕</button>
+    </div>
+
+    <form #restForm="ngForm" (ngSubmit)="saveRestaurant()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Restaurant Name *</label>
+          <input class="glass-input" type="text" name="name" 
+                 [(ngModel)]="currentRestaurant.name" required #name="ngModel"
+                 [class.invalid-field]="name.invalid && name.touched"
+                 placeholder="e.g. The Grand Spice">
+        </div>
+
+        <div class="form-group">
+          <label>Location *</label>
+          <input class="glass-input" type="text" name="location" 
+                 [(ngModel)]="currentRestaurant.location" required #loc="ngModel"
+                 [class.invalid-field]="loc.invalid && loc.touched"
+                 placeholder="e.g. Mumbai">
+        </div>
+
+        <div class="form-group full">
+          <label>Address *</label>
+          <input class="glass-input" type="text" name="address" 
+                 [(ngModel)]="currentRestaurant.address" required #addr="ngModel"
+                 [class.invalid-field]="addr.invalid && addr.touched"
+                 placeholder="e.g. 123 Main Street, Mumbai 400001">
+        </div>
+
+        <div class="form-group">
+          <label>Email *</label>
+          <input class="glass-input" type="email" name="email" 
+                 [(ngModel)]="currentRestaurant.email" 
+                 required email #email="ngModel"
+                 [class.invalid-field]="email.invalid && email.touched"
+                 placeholder="contact@restaurant.com">
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number *</label>
+          <input class="glass-input" type="text" name="phone" 
+                 [(ngModel)]="currentRestaurant.phoneNumber" 
+                 required [pattern]="phoneRegex" #phone="ngModel"
+                 [class.invalid-field]="phone.invalid && phone.touched"
+                 placeholder="e.g. 9876543210">
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
+
+      <div class="form-actions">
+        <button type="button" class="action-btn cancel-btn" (click)="cancelForm()">Cancel</button>
+        <button type="submit" class="action-btn save-btn" [disabled]="restForm.invalid">
+          {{ isEditMode ? 'Update Restaurant' : 'Add Restaurant' }}
+        </button>
+      </div>
+    </form>
   </div>
-
-  <div class="section-actions">
-
-    <input
-      type="text"
-      placeholder="Search restaurants..."
-      [(ngModel)]="searchText"
-      (input)="filterRestaurants()"
-      class="search-input"
-    />
-
-    <button *ngIf="canManage" class="action-btn add-btn" (click)="openAddForm()">
-      + Add Restaurant
-    </button>
-
-  </div>
-
 </div>
 
-<table class="modern-table">
+<div class="section-header">
+  <div>
+    <h2>Restaurants</h2>
+    <span class="section-subtitle">
+      {{ isAdminUser ? 'Manage all restaurant listings' : isManagerUser ? 'Your assigned restaurants' : 'Browse restaurants' }}
+    </span>
+  </div>
+  <div class="section-actions">
+    <input type="text" placeholder="Search restaurants..." [(ngModel)]="searchText" (input)="filterRestaurants()" class="search-input glass-input" />
+    <button *ngIf="canManage" class="action-btn add-btn" (click)="openAddForm()">+ Add Restaurant</button>
+  </div>
+</div>
 
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Location</th>
-      <th>Email</th>
-      <th>Phone</th>
-      <th *ngIf="canManage">Actions</th>
-    </tr>
-  </thead>
-
-  <tbody>
-
-    <ng-container *ngFor="let r of filteredRestaurants">
-
-      <!-- MAIN ROW -->
-      <tr class="click-row" (click)="toggleExpand(r)">
-        <td>{{r.id}}</td>
-        <td class="table-title">{{r.name}}</td>
-        <td>{{r.location}}</td>
-        <td>{{r.email}}</td>
-        <td>{{r.phoneNumber}}</td>
-
-        <td *ngIf="canManage">
-
-          <div class="action-group">
-
-            <button
-              class="table-btn edit-btn"
-              (click)="$event.stopPropagation(); openEditForm(r)"
-            >
-              Edit
-            </button>
-
-            <button
-              class="table-btn delete-btn"
-              (click)="$event.stopPropagation(); deleteRestaurant(r.id)"
-            >
-              Delete
-            </button>
-
-          </div>
-
-        </td>
-
+<div class="table-wrapper">
+  <table class="modern-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Location</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th *ngIf="canManage">Actions</th>
       </tr>
-
-      <!-- ✅ EXPANDED MENU -->
-      <tr *ngIf="expandedRestaurantId === r.id">
-
-        <td [attr.colspan]="6">
-
-          <div class="menu-expand glass-inner">
-
-            <app-menu-item
-              [restaurantId]="r.id"
-              [restaurantName]="r.name"
-              [canManage]="canManage"
-            ></app-menu-item>
-
-          </div>
-
-        </td>
-
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let r of filteredRestaurants; trackBy: trackById">
+        <tr class="click-row" (click)="toggleExpand(r)" [class.expanded-row]="expandedRestaurantId === r.id">
+          <td>{{r.id}}</td>
+          <td class="table-title">
+            <span class="expand-icon">{{ expandedRestaurantId === r.id ? '▼' : '▶' }}</span>
+            {{r.name}}
+          </td>
+          <td>{{r.location}}</td>
+          <td>{{r.email}}</td>
+          <td>{{r.phoneNumber}}</td>
+          <td *ngIf="canManage">
+            <div class="action-group">
+              <button class="table-btn edit-btn" (click)="$event.stopPropagation(); openEditForm(r)">Edit</button>
+              <button class="table-btn delete-btn" (click)="$event.stopPropagation(); deleteRestaurant(r.id)">Delete</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="expandedRestaurantId === r.id">
+          <td [attr.colspan]="canManage ? 6 : 5" class="expand-cell">
+            <div class="menu-expand glass-inner">
+              <app-menu-item [restaurantId]="r.id" [restaurantName]="r.name" [canManage]="canManageMenuItem(r)" [isCustomerUser]="isCustomerUser"></app-menu-item>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+      <tr *ngIf="filteredRestaurants.length === 0 && !loading">
+        <td colspan="6" class="empty-cell">No restaurants found.</td>
       </tr>
-
-    </ng-container>
-
-  </tbody>
-
-</table>
+    </tbody>
+  </table>
+</div>

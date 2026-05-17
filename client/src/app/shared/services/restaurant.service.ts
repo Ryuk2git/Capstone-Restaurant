@@ -96,17 +96,20 @@ export class RestaurantService {
   }
 
   assignManager(
-    assignment:RestaurantManagerAssignmentDTO
-  ):Observable<any>{
-
+    assignment: any
+  ): Observable<any> {
     return this.http.post(
-      `${environment.apiUrl}/assignments`,
+      `${environment.apiUrl}assignmanager`,
       assignment,
-      {
-        headers:this.getHeaders()
-      }
+      { headers: this.getHeaders() }
     );
+  }
 
+  getAssignmentsByManager(managerId: number): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${environment.apiUrl}assignmanager/manager/${managerId}`,
+      { headers: this.getHeaders() }
+    );
   }
 
 }

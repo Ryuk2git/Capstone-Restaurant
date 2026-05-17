@@ -1,6 +1,5 @@
 package com.edutech.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +66,10 @@ public class FeedbackServiceImpl implements FeedbackService {
         feedback.setCustomerName(updatedFeedback.getCustomerName());
         feedback.setComment(updatedFeedback.getComment());
         feedback.setRating(updatedFeedback.getRating());
+        feedback.setMenuItem(updatedFeedback.getMenuItem());
+        if (updatedFeedback.getRestaurant() != null) {
+            feedback.setRestaurant(updatedFeedback.getRestaurant());
+        }
 
         return feedbackRepository.save(feedback);
     }

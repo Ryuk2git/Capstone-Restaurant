@@ -38,6 +38,8 @@ public class RestaurantManagerAssignmentServiceImpl implements RestaurantManager
 
         assignment.setRestaurant(restaurant);
         assignment.setManager(manager);
+        assignment.setAssignedBy(manager);   // set assigned_by to the manager being assigned
+        assignment.setAssignedAt(LocalDateTime.now());
 
         RestaurantManagerAssignment savedAssignment = assignmentRepository.save(assignment);
 
@@ -54,14 +56,9 @@ public class RestaurantManagerAssignmentServiceImpl implements RestaurantManager
     }
 
     @Override
-    public List<RestaurantManagerAssignmentDTO>
-    getAssignmentsByManager(Long managerId) {
-        return assignmentRepository.findAll()
+    public List<RestaurantManagerAssignmentDTO> getAssignmentsByManager(Long managerId) {
+        return assignmentRepository.findByManagerId(managerId)
                 .stream()
-                .filter(assignment ->
-                        assignment.getManager()
-                                .getId()
-                                .equals(managerId))
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
@@ -79,10 +76,7 @@ public class RestaurantManagerAssignmentServiceImpl implements RestaurantManager
                 assignment.getRestaurant().getLocation(),
                 assignment.getManager().getUsername(),
                 assignment.getManager().getEmail(),
-                LocalDateTime.now()
+                assignment.getAssignedAt()
         );
     }
-
-
-
 }

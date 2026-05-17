@@ -14,6 +14,8 @@ export class DashboardComponent implements OnInit {
   isAdminUser = false;
   isManagerUser = false;
   isCustomerUser = false;
+  
+  dropdownOpen = false;
 
   constructor(private authService: AuthService) {}
 
@@ -25,6 +27,10 @@ export class DashboardComponent implements OnInit {
     this.isManagerUser = this.authService.hasRole(Role.MANAGER);
     this.isCustomerUser = this.authService.hasRole(Role.CUSTOMER);
 
+  }
+
+  toggleDropdown(): void {
+    this.dropdownOpen = !this.dropdownOpen;
   }
 
   logout(): void {

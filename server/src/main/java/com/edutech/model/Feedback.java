@@ -14,8 +14,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+// import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "feedback")
@@ -43,7 +43,7 @@ public class Feedback {
 
    @ManyToOne
    @JoinColumn(name = "menu_item_id")
-   @JsonIgnore
+   @JsonIgnoreProperties({"restaurant"})
    private MenuItem menuItem;
 
    @ManyToOne
